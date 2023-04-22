@@ -6,7 +6,7 @@ import mesa
 
 class VarNode:
     def __init__(self,Location,OrbitPars,resource,size, id):
-        self.Loc = location #tuple of floats (x,y) coordinates
+        self.Loc = Location #tuple of floats (x,y) coordinates
         self.OrbitPars = OrbitPars #Dictionary of structure {"a": float, "ex": float, "ey": float, "i": float, "RAAN": float, "f": true anomaly}
         self.resource = resource #float
         self.size = size #maximum number of spaces/docking ports, of type int
