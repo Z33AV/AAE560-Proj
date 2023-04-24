@@ -1,27 +1,33 @@
 import mesa
-import Agents.py
+import Agents
+import Phys
 
+class OverallModel(mesa.Model):
 
-class OveralModel(mesa.Model):
-
-    def __init__(self, Num_transporters, num_VarNodes, num_FixNodes):
+    def __init__(self, fixNodes, varNodes, transports): #note that these inputs are CSV FILES read in in MAIN
         self.schedule = mesa.time.RandomActivationByType(self)
-        self.nVN = num_VarNodes
-        self.nT = Num_transporters
-        self.nFN = num_FixNodes
+        self.VnList = varNodes
+        self.TList = transports
+        self.FnList = fixNodes
 
-
-        #initialize all variable nodes
-        for i in range(self.num_varNodes):
-            a = Agents.VarNode(orbitParams, resource, size, id)
+        for i in self.FnList:
+            a = Agents.FixNode( (self.FnList[i][1], self.FnList[i][2] ), {"a": None, "ex": None, "ey": None, "i": None, "RAAN": None, "f": None,}, self.FnList[i][3], self.FnList[i][4], self.FnList[i][0] )
+            #Phys.Place(a) - will generate the base orbital params
             self.schedule.add(a)
+            print("Agent " + a.id + " added to schedule")
 
-       # initialize all fix nodes
-        for i in range(self.nFN):
-            a = Agents.FixNode(orbitParams, resource, size, id)
+        for i in self.VnList:
+            a = Agents.FixNode( (self.VnList[i][1], self.VnList[i][2] ), {"a": None, "ex": None, "ey": None, "i": None, "RAAN": None, "f": None,}, self.VnList[i][3], self.VnList[i][4], self.VnList[i][0] )
+            #Phys.place(a)
             self.schedule.add(a)
+            print("Agent " + a.id + " added to schedule")
 
-        # initialize transporters
-        for i in range(self.nT):
-            a = Agents.Transporter(fuel, loc, orig, dest, operator)
-            self.schedule.add(a)
+
+        #transporter init loop should inherit orbit params from orig node.
+
+
+
+
+
+
+

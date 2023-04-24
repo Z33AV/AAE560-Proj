@@ -9,16 +9,18 @@ import mesa
 # orbits (a,ex,ey,i,raan,f: float)
 # resource level (normalized float)
 
-=======
+#=======
 #yeet = 5.0
 
+
+#REWORK: rework generic place function so that it generates orbital paramters at t = 0 based on location.
 # # Methods called on node objects 
 # def PlaceNode(node):
 #     # Method to place the fixed nodes at initial time
 #     # Inputs: self
 #     # physically places nodes on grid (build our own grid)
+      #computes initial orbital paramters from initial location
 #     return
-    
 
 # def PlaceTransporters(transporter):
 #     # Method to place the transporters at initial time
@@ -28,7 +30,7 @@ import mesa
 
 def StepOrbit(agent,dt):
     # Inputs: dt (float)
-    # Method to step object to dt along its orbi
+    # Method to step object to dt along its orbit
     #
     return
 

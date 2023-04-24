@@ -18,7 +18,12 @@ class VarNode(mesa.Agent):
 
     def Reserve(self, Transporter): #reserves port for transporter, corresponds to transporter reserve methods
         for i in self.ports:
-            if self.ports
+            if self.ports[i] == None:
+                self.ports[i] = Transporter.id
+                break
+            else:
+                continue
+
         return
 
     #Define step and/or advance functions
@@ -28,18 +33,19 @@ class VarNode(mesa.Agent):
 
 
 class FixNode(VarNode): #fixed node class, inherit from VarNode
-    #def __init__(self):
+    pass
 
 
 
 class Transporter(mesa.Agent):
-    def __init__(self, fuel, loc, orig, dest, operator):
+    def __init__(self, fuel, loc, orig, dest, operator,id):
         self.fuel = fuel #floating point variable reflecting amount
         self.loc = loc # (x,y) tupleof cartesian coordinates
         self.orig  = orig #id of most recent originating node
         self.dest = dest #id of destination node
         self.operator = operator #id of operating company.
         self.Current_Node = self.orig
+        self.id = id
 
     def Dock(self, Node):
         self.loc = Node.loc
