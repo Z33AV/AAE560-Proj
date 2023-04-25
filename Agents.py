@@ -5,7 +5,8 @@ import mesa
 #print("This is the agents file")
 
 class VarNode(mesa.Agent):
-    def __init__(self,Location,OrbitPars,resource,size, id):
+    def __init__(self,Location,OrbitPars,resource,size, id,model):
+        super().__init__(id, model)
         self.loc = Location #tuple of floats (x,y) coordinates
         self.OrbitPars = OrbitPars #Dictionary of structure {"a": float, "ex": float, "ey": float, "i": float, "RAAN": float, "f": true anomaly}
         self.resource = resource #float
@@ -38,7 +39,8 @@ class FixNode(VarNode): #fixed node class, inherit from VarNode
 
 
 class Transporter(mesa.Agent):
-    def __init__(self, fuel, loc, orig, dest, operator,id):
+    def __init__(self, fuel, loc, orig, dest, operator,id, model):
+        super().__init__(id, model)
         self.fuel = fuel #floating point variable reflecting amount
         self.loc = loc # (x,y) tupleof cartesian coordinates
         self.orig  = orig #id of most recent originating node
