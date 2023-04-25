@@ -3,7 +3,7 @@
 
 import math
 import mesa
-import modelDef
+from modelDef import OverallModel
 import csv
 
 # PREPARING the list of agent params to be instantiated in model by reading in the CSVs
@@ -29,7 +29,7 @@ with open("VarNodes.csv") as f1:
         #print(item)
     VnList.pop(0)
 #print("This should be VnList:  \n")
-print(VnList)
+#print(VnList)
 #print("\n")
 
 
@@ -42,4 +42,6 @@ with open("Transporters.csv") as f2:
         #print(item)
     TList.pop(0)
 
-print(TList)
+#print(TList)
+
+new_model = OverallModel(FnList,VnList,TList)
