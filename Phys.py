@@ -16,12 +16,12 @@ import Agents
 
 #REWORK: rework generic place function so that it generates orbital paramters at t = 0 based on location.
 # # Methods called on node objects 
-def PlaceNode(node):
+#def PlaceNode(node):
 #     # Method to place the fixed nodes at initial time
 #     # Inputs: self
 #     # physically places nodes on grid (build our own grid)
       #computes initial orbital paramters from initial location
-     return
+#     return
 
 # def PlaceTransporters(transporter):
 #     # Method to place the transporters at initial time
@@ -35,14 +35,14 @@ def PlaceNode(node):
 #     #
 #     return
 
-def ComputeTransfer(transporter):
+#def ComputeTransfer(transporter):
     # Method to compute the orbit transfer between nodes
     # Inputs: 
     # Outputs: dictionary containing {"isPossible": bool, "dV": float, "cost": float}
     # 
-    return
+#    return
 
-def PlaceNodes(node):
+def PlaceNode(node):
     # Places nodes at initial orbits
     # Input: node agent 
     
