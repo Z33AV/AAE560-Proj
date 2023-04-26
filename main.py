@@ -1,7 +1,7 @@
 #file containing main control flow and simulation code
 
 
-import math
+#import math
 import mesa
 from modelDef import OverallModel
 import csv
@@ -17,7 +17,7 @@ with open("FixNodes.csv") as f:
         #print(item)
     FnList.pop(0)
 
-print(FnList)
+#print(FnList)
 
 
 with open("VarNodes.csv") as f1:
@@ -44,4 +44,6 @@ with open("Transporters.csv") as f2:
 
 #print(TList)
 
+
+#ACTUAL MODEL SETUP
 new_model = OverallModel(FnList,VnList,TList)
