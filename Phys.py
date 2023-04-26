@@ -35,12 +35,51 @@ import Agents
 #     #
 #     return
 
-def ComputeTransfer(transporter):
-    # Method to compute the orbit transfer between nodes
-    # Inputs: 
-    # Outputs: dictionary containing {"isPossible": bool, "dV": float, "cost": float}
-    # 
-    return
+def ComputeTransfer(origin,dest):
+    # Computes orbital transfer between a transporter and some destination
+    # Input: origin node (obj), destination node (obj)
+    # Output: TransferParams (dict: {"isPossible": bool,"dV": float,"TOF": float})
+    
+    # Constants
+    mu = 398600.4418 # km^3/s^2
+    
+    # Initial and final destinations
+    pre = origin.loc # Pre-maneuver position
+    post = dest.loc  # Post-maneuver position
+    
+    r_i = numpy.sqrt(origin.loc[0]**2 + origin.loc[1]**2)
+    r_f = numpy.sqrt(dest.loc[0]**2 + dest.loc[1]**2)
+    
+    calcTransfer = 0
+    tof = -1
+    dv_tot = -1
+    
+    # Determine if transfer is possible
+    ang = math.acos(numpy.dot(pre,post)/(r_i*r_f)) # rad, angle between two objects
+
+    n_f = numpy.sqrt(mu/r_f**3)             # rad/s, mean motion of destination node
+    a_t = 1/2 * (r_i + r_f)                 # km, transfer orbit SMA 
+    tof = math.pi * numpy.sqrt(a_t**3/mu)   # s, time-of-flight
+    phi = math.pi - n_f * tof               # rad, required phase angle
+
+    # 5 deg tolerance for transfer geometry 
+    if abs(phi - ang)*180/math.pi <= 5: 
+        calcTransfer = 1
+
+    if calcTransfer:        
+        v_i = numpy.sqrt(mu/r_i)            # km/s, velocity before initial maneuver 
+        v_p = numpy.sqrt(2*mu/r_i - mu/a_t) # km/s, velocity after initial maneuver
+        dv_1 = v_p - v_i                    # km/s, first dV 
+
+        v_a = numpy.sqrt(2*mu/r_f - mu/a_t) # km/s, velocity before final maneuver
+        v_f = numpy.sqrt(mu/r_f)            # km/s, velocity after final maneuver
+        dv_2 = v_f - v_a                    # km/s, last dV
+
+        dv_tot = dv_1 + dv_2                # km/s, total dV
+
+    TransferParams = {"isPossible": calcTransfer,"dV": dv_tot,"TOF":tof}
+    
+    return TransferParams
 
 def PlaceNode(node):
     # Places nodes at initial orbits
@@ -110,7 +149,7 @@ def Cart2Orb(position):
         asc = 1
     
     # Determine elements
-    sma = (-mu/2)*(vmag**2/2 - mu/rmag)**(-1)
+    sma = math.ceil((-mu/2)*(vmag**2/2 - mu/rmag)**(-1))
     ecc = numpy.sqrt(1-hmag**2/(mu*sma))
     i = math.acos(icr[2,2]) * 180/math.pi
     raan = 0.0 #math.atan2(icr[0,2],-icr[1,2]) * 180/math.pi
@@ -130,8 +169,8 @@ def Cart2Orb(position):
     if argp < 0:
         argp = argp + 360
         
-    eccx = ecc*math.cos(argp*math.pi/180)
-    eccy = ecc*math.sin(argp*math.pi/180)
+    eccx = round(ecc*math.cos(argp*math.pi/180),5)
+    eccy = round(ecc*math.sin(argp*math.pi/180),5)
     
     orbs = {"a":sma,"ex":eccx,"ey":eccy,"inc":i,"raan":raan,"f":theta}
     
