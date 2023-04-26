@@ -16,12 +16,12 @@ import Agents
 
 #REWORK: rework generic place function so that it generates orbital paramters at t = 0 based on location.
 # # Methods called on node objects 
-def PlaceNode(node):
+# def PlaceNode(node):
 #     # Method to place the fixed nodes at initial time
 #     # Inputs: self
 #     # physically places nodes on grid (build our own grid)
       #computes initial orbital paramters from initial location
-     return
+#      return
 
 # def PlaceTransporters(transporter):
 #     # Method to place the transporters at initial time
@@ -42,7 +42,7 @@ def ComputeTransfer(transporter):
     # 
     return
 
-def PlaceNodes(node):
+def PlaceNode(node):
     # Places nodes at initial orbits
     # Input: node agent 
     
@@ -67,10 +67,9 @@ def StepOrbit(obj,dt):
     M0 = 0                              # Initial mean anomaly, rad
     M = (M0 + n*dt) * 180/math.pi       # Stepped mean anomaly, deg
     
-    newOrbit = {"a":orbels["a"],"ex": orbels["ex"],"ey":orbels["ey"],"inc":orbels["inc"],"raan":orbels["raan"],"f":M}
-    obj.OrbitPars = newOrbit
+    obj.OrbitPars["f"] = M
 
-    newPosition = Orb2Cart(newOrbit)
+    newPosition = Orb2Cart(obj.OrbitPars)
     obj.loc = newPosition
 
     return 
@@ -93,7 +92,8 @@ def Cart2Orb(position):
     
     # Normal direction
     h = numpy.cross(rc,vc)
-    hhat = h/numpy.sqrt(h[0]**2 + h[1]**2 + h[2]**2)
+    hmag = numpy.sqrt(h[0]**2 + h[1]**2 + h[2]**2)
+    hhat = h/hmag
     
     # Transverse direction
     thetahat = numpy.cross(hhat,rhat)
@@ -111,14 +111,15 @@ def Cart2Orb(position):
     
     # Determine elements
     sma = (-mu/2)*(vmag**2/2 - mu/rmag)**(-1)
-    ecc = numpy.sqrt(1-h**2/(mu*sma))
+    ecc = numpy.sqrt(1-hmag**2/(mu*sma))
     i = math.acos(icr[2,2]) * 180/math.pi
-    raan = math.atan2(icr[0,2],-icr[1,2]) * 180/math.pi
+    raan = 0.0 #math.atan2(icr[0,2],-icr[1,2]) * 180/math.pi
     theta = math.atan2(icr[2,0],icr[2,1]) * 180/math.pi
     
     ebar = numpy.cross(vc,h)/mu - rc/rmag
     emag = numpy.sqrt(ebar[0]**2 + ebar[1]**2 + ebar[2]**2)
-    TA = math.acos(numpy.dot(ebar,rc)/(emag/rmag)) * 180/math.pi
+    theta = math.atan2(icr[2,0],icr[2,1]) * 180/math.pi
+    TA = math.acos(numpy.dot(ebar,rc)/emag/rmag) * 180/math.pi
     
     if asc==0:
         TA = -1*TA
@@ -132,7 +133,7 @@ def Cart2Orb(position):
     eccx = ecc*math.cos(argp*math.pi/180)
     eccy = ecc*math.sin(argp*math.pi/180)
     
-    orbs = {"a":sma,"ex":eccx,"ey":eccy,"inc":i,"raan":raan,"f":TA}
+    orbs = {"a":sma,"ex":eccx,"ey":eccy,"inc":i,"raan":raan,"f":theta}
     
     return orbs
 
@@ -174,7 +175,7 @@ def Orb2Cart(orbels):
     #             asc = 1
     
     p = sma*(1-ecc**2)
-    r = p/(1+ecc*math.acos(f))
+    r = p/(1+ecc*math.cos(f))
     # v = numpy.sqrt(mu*(2/r - 1/sma))
     # h = numpy.sqrt(p*mu)
     
@@ -187,6 +188,10 @@ def Orb2Cart(orbels):
     
     r_rot = numpy.array([r,0,0])
     # v_rot = numpy.array([v*math.sin(gamma),v*math.cos(gamma),0])
+    
+    theta = theta * math.pi/180
+    i = i * math.pi/180
+    raan = raan * math.pi/180
     
     icr = numpy.array([[math.cos(raan)*math.cos(theta)-math.sin(raan)*math.cos(i)*math.sin(theta),-math.cos(raan)*math.sin(theta)-math.sin(raan)*math.cos(i)*math.cos(theta),math.sin(raan)*math.sin(i)],
     [math.sin(raan)*math.cos(theta)+math.cos(raan)*math.cos(i)*math.sin(theta),-math.sin(raan)*math.sin(theta)+math.cos(raan)*math.cos(i)*math.cos(theta),-math.cos(raan)*math.sin(i)],
