@@ -14,6 +14,31 @@ class VarNode(mesa.Agent):
         self.ports = [None]*self.size
         self.id = id #Either a number (int) or string that identifies it, mainly so the transporters can reference it in origin or destination.
 
+        #Jan's Variables
+        self.margin = 0.05
+        self.baseprice = -1
+        self.capacity = 100 #Maximum capacity of node in units of resource
+    
+    def buy_price(self):
+        inv_prem = 0 #price premium (or discount) due to current inventory level
+        price = self.price * inv_prem #compute purchase price
+        return price
+    
+    def sell_price(self, Transporter):
+        inv_prem = 0 #price premium (or discount) due to current inventory level
+        price = self.price * inv_prem
+        if(Transporter.operator == self.operator):
+            price = price * self.margin #account for margin when selling "out of network"
+        return price
+    
+    def transact(self, Transporter, quantity): #returns the money exchange associated with the transaction
+        if(quantity > 0): #indicates a purchase
+            price = self.buy_price()
+        else: #indicates a sale
+            price = self.sell_price(Transporter)
+        self.resource = self.resource + quantity
+        return price * quantity
+
     def Dock(self, Transporter): #adds transporter to the ports array, corresponds to Dock method in transporter class
         return
 
@@ -48,6 +73,9 @@ class Transporter(mesa.Agent):
         self.operator = operator #id of operating company.
         self.Current_Node = self.orig
         self.id = id
+        
+        #Jan's variables
+        self.resourceValue = -1 #current value/resource (includes value add)
 
     def Dock(self, Node):
         self.loc = Node.loc
