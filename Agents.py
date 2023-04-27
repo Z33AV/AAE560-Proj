@@ -29,7 +29,7 @@ class VarNode(mesa.Agent):
     def sell_price(self, trans):
         inv_prem = self.getInvPrem(1) #price premium (or discount) due to current inventory level
         price = self.price * inv_prem
-        if(trans.operator == self.operator):
+        if(trans.operator != self.operator):
             price = price * self.margin #account for margin when selling "out of network"
         return price
     
