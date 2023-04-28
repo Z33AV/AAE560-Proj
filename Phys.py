@@ -106,7 +106,7 @@ def StepOrbit(obj,dt):
     M0 = 0                              # Initial mean anomaly, rad
     M = (M0 + n*dt) * 180/math.pi       # Stepped mean anomaly, deg
     
-    obj.OrbitPars["f"] = M
+    obj.OrbitPars["f"] = math.fmod(M,360)
 
     newPosition = Orb2Cart(obj.OrbitPars)
     obj.loc = newPosition
@@ -125,9 +125,14 @@ def Cart2Orb(position):
     rmag = numpy.sqrt(rc[0]**2 + rc[1]**2 + rc[2]**2)
     rhat = rc/rmag
     
-    vcirc = numpy.sqrt(mu/rmag)
-    vc = numpy.array([0,vcirc,0])
-    vmag = numpy.sqrt(vc[0]**2 + vc[1]**2 + vc[2]**2)
+    tan = math.atan2(rc[1],rc[0]) # rad
+    if tan < 0:
+        tan = tan + 2*math.pi
+
+    dcm1 = numpy.array([[math.cos(tan),-math.sin(tan),0],[math.sin(tan),math.cos(tan),0],[0,0,1]])
+    
+    vcirc = numpy.array([0,numpy.sqrt(mu/rmag),0])
+    vc = numpy.matmul(vcirc,numpy.linalg.inv(dcm1))
     
     # Normal direction
     h = numpy.cross(rc,vc)
@@ -145,34 +150,41 @@ def Cart2Orb(position):
     rdot = numpy.dot(rhat,vc)
     
     asc = 0
-    if rdot < 0:
+    if rdot < 0: # ascending in orbit flag
         asc = 1
     
     # Determine elements
-    sma = math.ceil((-mu/2)*(vmag**2/2 - mu/rmag)**(-1))
-    ecc = numpy.sqrt(1-hmag**2/(mu*sma))
-    i = math.acos(icr[2,2]) * 180/math.pi
-    raan = 0.0 #math.atan2(icr[0,2],-icr[1,2]) * 180/math.pi
-    theta = math.atan2(icr[2,0],icr[2,1]) * 180/math.pi
+    ecc1 = (vc[1]*h[2] - vc[2]*h[1])/mu - rc[0]/rmag
+    ecc2 = (vc[2]*h[0] - vc[0]*h[2])/mu - rc[1]/rmag
+    ecc3 = (vc[0]*h[1] - vc[1]*h[0])/mu - rc[2]/rmag
+    eccv = numpy.array([ecc1,ecc2,ecc3]) # eccentricity vector
+    ecc = numpy.linalg.norm(eccv) # eccentricity
+    sma = (hmag**2/mu)/(1-ecc**2) # km, semimajor axis
+    i = math.acos(icr[2,2]) * 180/math.pi # deg, inclination
+    raan = 0 #math.atan2(icr[0,2],-icr[1,2]) * 180/math.pi
+    theta = math.atan2(icr[2,0],icr[2,1]) * 180/math.pi # deg, argument of lat
     
     ebar = numpy.cross(vc,h)/mu - rc/rmag
     emag = numpy.sqrt(ebar[0]**2 + ebar[1]**2 + ebar[2]**2)
-    theta = math.atan2(icr[2,0],icr[2,1]) * 180/math.pi
-    TA = math.acos(numpy.dot(ebar,rc)/emag/rmag) * 180/math.pi
+    
+    if emag != 0:
+        TA = math.acos(numpy.dot(ebar,rc)/emag/rmag) * 180/math.pi
+    else: # Catch divide by zero error
+        TA = math.acos(-1)
     
     if asc==0:
         TA = -1*TA
         TA = TA + 360
     
-    argp = theta - TA
+    argp = theta - TA # deg, argument of perigee
     
     if argp < 0:
         argp = argp + 360
         
-    eccx = round(ecc*math.cos(argp*math.pi/180),5)
-    eccy = round(ecc*math.sin(argp*math.pi/180),5)
+    eccx = ecc*math.cos(argp*math.pi/180) # eccentricity in x
+    eccy = ecc*math.sin(argp*math.pi/180) # eccentricity in y
     
-    orbs = {"a":sma,"ex":eccx,"ey":eccy,"inc":i,"raan":raan,"f":theta}
+    orbs = {"a":sma,"ex":eccx,"ey":eccy,"inc":i,"raan":raan,"f":tan*180/math.pi}
     
     return orbs
 
@@ -197,36 +209,10 @@ def Orb2Cart(orbels):
     if f<0:
         f = f+2*math.pi
     
-    # if ecc == 0:
-    #     asc = -1
-    # else:
-    #     if (f>0) and (f<math.pi):
-    #         if i < math.pi/2:
-    #             asc = 1
-    #         elif i > math.pi/2:
-    #             asc = 0
-    #     elif (f==0) or (f==math.pi):
-    #         asc = -1
-    #     else:
-    #         if i < math.pi/2:
-    #             asc = 0
-    #         elif i > math.pi/2:
-    #             asc = 1
-    
     p = sma*(1-ecc**2)
     r = p/(1+ecc*math.cos(f))
-    # v = numpy.sqrt(mu*(2/r - 1/sma))
-    # h = numpy.sqrt(p*mu)
-    
-    # if asc == 1:
-    #     gamma = math.acos(h/(r*v))
-    # elif asc == 0:
-    #     gamma = -math.acos(h/(r*v))
-    # else:
-    #     gamma = 0
     
     r_rot = numpy.array([r,0,0])
-    # v_rot = numpy.array([v*math.sin(gamma),v*math.cos(gamma),0])
     
     theta = theta * math.pi/180
     i = i * math.pi/180
