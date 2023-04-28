@@ -13,13 +13,15 @@ class VarNode(mesa.Agent):
         self.size = size #maximum number of spaces/docking ports, of type int
         self.ports = [None]*self.size
         self.id = id #Either a number (int) or string that identifies it, mainly so the transporters can reference it in origin or destination.
-        self.buyer = True #is this node buying?
-        self.seller = True #is this node selling?
 
         #Jan's Variables
         self.margin = 0.05
         self.baseprice = -1
         self.capacity = 100 #Maximum capacity of node in units of resource
+        self.buyer = True #is this node buying?
+        self.seller = True #is this node selling?
+        self.bidList = []
+        self.incoming = 0
     
     def buy_price(self):
         inv_prem = self.getInvPrem(0) #price premium (or discount) due to current inventory level
@@ -32,6 +34,13 @@ class VarNode(mesa.Agent):
         if(trans.operator != self.operator):
             price = price * self.margin #account for margin when selling "out of network"
         return price
+    
+    def max_amt(self, t): #returns the maximum allowable resource transfer based on inventory constraints
+        #t = 0 -> buy, t = 1 -> sell
+        if(t == 0):
+            return self.resource #can't sell more than I have
+        else:
+            return self.capacity-self.resource #can't buy more than I have space for
     
     def transact(self, trans, quantity): #returns the money exchange associated with the transaction
         if(quantity > 0): #indicates a purchase
@@ -68,6 +77,21 @@ class VarNode(mesa.Agent):
                 continue
 
         return
+    
+    def takeBid(self, time):
+        self.bidList.append(time)
+    
+    def bestBid(self):
+        return min(self.bidList)
+
+    def acceptBid(self, amount):
+        self.bidList = []
+        self.incoming = amount
+
+    def bidComplete(self):
+        self.incoming = 0
+        self.bidList = []
+        pass
 
     #Define step and/or advance functions
     def step(self):
@@ -76,7 +100,16 @@ class VarNode(mesa.Agent):
 
 
 class FixNode(VarNode): #fixed node class, inherit from VarNode
-    pass
+    def __init__(self, Location, OrbitPars, resource, size, id, model, c_rate):
+        super().__init__(Location, OrbitPars, resource, size, id, model)
+        self.consume_rate = c_rate #rate of resource consumption, negative for resource supplier
+
+    def step(self):
+        self.resource = self.resource - self.consume_rate
+        if(self.resource < 0):
+            self.resource = 0
+        elif(self.resource > self.capacity):
+            self.resource = self.capacity
 
 
 
@@ -101,17 +134,32 @@ class Transporter(mesa.Agent):
         self.orig = Node.id
         return
     
-    def transact(self, Node): #conduct a transaction
-        return
+    def transact(self, Node, price, t): #conduct a transaction
+        #t = 0 -> buy, t = 1 -> sell (Node POV!!)
+        if(t == 0):
+            tmp = self.resource - (self.fuel_reserve * self.capacity)
+            amount = min(Node.max_amt(t), tmp)
+        else:
+            amount = min(Node.max_amt(t), self.capacity - self.resource)
+            amount = amount * -1
+        self.resource = self.resource - amount
+        Node.transact(self, amount)
+        return price*amount #return net transaction value to transporter!
     
     def sellprice(self, Node): #check sale price
-        return
+        prem = self.compPrems(1) #price premium (or discount) due to current inventory level
+        price = self.price * prem
+        if(Node.operator != self.operator):
+            price = price * self.margin #account for margin when selling "out of network"
+        return price
     
     def buyprice(self): #check buy price
-        return
+        prem = self.compPrems(0) #price premium (or discount) due to current inventory level
+        price = self.price * prem #compute purchase price
+        return price
     
-    def compPrems(self):
-        return
+    def compPrems(self, t): #t = 0 -> buy (transporter POV), t = 1 -> sell (transporter POV)
+        return 1
     
     def makeBids(self):
         return
