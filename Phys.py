@@ -50,21 +50,26 @@ def ComputeTransfer(origin,dest):
     r_i = numpy.sqrt(origin.loc[0]**2 + origin.loc[1]**2)
     r_f = numpy.sqrt(dest.loc[0]**2 + dest.loc[1]**2)
     
-    calcTransfer = 0
-    tof = -1
-    dv_tot = -1
+    # calcTransfer = 0
+    # tof = -1
+    # dv_tot = -1
     
     # Determine if transfer is possible
-    ang = math.acos(numpy.dot(pre,post)/(r_i*r_f)) # rad, angle between two objects
-
-    n_f = numpy.sqrt(mu/r_f**3)             # rad/s, mean motion of destination node
-    a_t = 1/2 * (r_i + r_f)                 # km, transfer orbit SMA 
-    tof = math.pi * numpy.sqrt(a_t**3/mu)   # s, time-of-flight
-    phi = math.pi - n_f * tof               # rad, required phase angle
-
-    # 5 deg tolerance for transfer geometry 
-    if abs(phi - ang)*180/math.pi <= 5: 
-        calcTransfer = 1
+    try:
+        ang = math.acos(numpy.dot(pre,post)/(r_i*r_f)) # rad, angle between two objects
+    
+        n_f = numpy.sqrt(mu/r_f**3)             # rad/s, mean motion of destination node
+        a_t = 1/2 * (r_i + r_f)                 # km, transfer orbit SMA 
+        tof = math.pi * numpy.sqrt(a_t**3/mu)   # s, time-of-flight
+        phi = math.pi - n_f * tof               # rad, required phase angle
+    
+        # 5 deg tolerance for transfer geometry 
+        if abs(phi - ang)*180/math.pi <= 5: 
+            calcTransfer = 1
+    except:
+        calcTransfer = 0
+        tof = -1
+        dv_tot = -1
 
     if calcTransfer:        
         v_i = numpy.sqrt(mu/r_i)            # km/s, velocity before initial maneuver 
