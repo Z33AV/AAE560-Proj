@@ -21,6 +21,7 @@ class VarNode(mesa.Agent):
         self.buyer = True #is this node buying?
         self.seller = True #is this node selling?
         self.bidList = []
+        self.transbidlist = []
         self.incoming = 0
     
     def buy_price(self):
@@ -78,20 +79,23 @@ class VarNode(mesa.Agent):
 
         return
     
-    def takeBid(self, time):
+    def takeBid(self, time, trans):
         self.bidList.append(time)
-    
+        self.transbidlist.append(trans)
     def bestBid(self):
+        #unused so far
         return min(self.bidList)
 
     def acceptBid(self, amount):
         self.bidList = []
+        self.transbidlist = []
         self.incoming = amount
 
     def bidComplete(self):
         self.incoming = 0
         self.bidList = []
-        pass
+
+        return
 
     #Define step and/or advance functions
     def step(self):
@@ -121,8 +125,9 @@ class Transporter(mesa.Agent):
         self.orig  = orig #id of most recent originating node
         self.dest = dest #id of destination node
         self.operator = operator #id of operating company.
-        self.Current_Node = self.orig
+        self.Current_Node = self.orig #JUST A STRING
         self.id = id
+        self.avail = 1 #1 is available, 0 is unavailable
         
         #Jan's variables
         self.resourceValue = -1 #current value/resource (includes value add)
@@ -161,11 +166,13 @@ class Transporter(mesa.Agent):
     def compPrems(self, t): #t = 0 -> buy (transporter POV), t = 1 -> sell (transporter POV)
         return 1
     
-    def makeBids(self):
+    def makeBids(self,TargetNode,tof):
+        #write code to add bid to bidlist of Target Node, note that target node is the acutal objeect so you can reference it
+        TargetNode.takeBid(tof,self)
         return
 
     def Reserve(self):
-        self.dest.Reserve(self)
+        self.dest.Reserve(self) #broken because self.dest is a stringof the destination id, not the actual object
 
     def step(self):
         # step function to move agent forward in its time step NOTE: use mesa scheduler

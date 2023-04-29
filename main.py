@@ -42,8 +42,10 @@ with open("Transporters.csv") as f2:
         #print(item)
     TList.pop(0)
 
-#print(TList)
+print(TList)
 
 
 #ACTUAL MODEL SETUP
 new_model = OverallModel(FnList,VnList,TList)
+
+new_model.step()

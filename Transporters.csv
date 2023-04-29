@@ -1,4 +1,4 @@
 id,fuel,x,y,orig,dest,operator
-TestTrans1,2000,-250,250,earth,FixTest1,SpaceY
+TestTrans1,2000,-250,250,FixTest2,FixTest1,SpaceY
 TestTrans2,1000,350,120,VarTest2,FixTest2,RedOrigin
-TestTrans3,0,300,200,earth,VarTest1,ChadGalactic
+TestTrans3,0,300,200,FixTest1,VarTest1,ChadGalactic
