@@ -1,9 +1,25 @@
 #File containing Agent class definitions and methods
 import math
+import random
+
 import mesa
 
-#print("This is the agents file")
+import Phys
+#from modelDef import NodeLookup
 
+#Aux node lookup function
+def NodeLookup(str, list):
+    #list is  a list of nodes
+    #output = None
+    for i in list:
+        if (i.id.lower() == str.lower()):
+            return i
+    print("ERROR 69420 -> no node with matchin id to requested lookup")
+    return
+
+#print("This is the agents file")
+# CONSTANT
+dt = 1800 #seconds
 class VarNode(mesa.Agent):
     def __init__(self,Location,OrbitPars,resource,size,id,model):
         super().__init__(id, model)
@@ -13,6 +29,7 @@ class VarNode(mesa.Agent):
         self.size = size #maximum number of spaces/docking ports, of type int
         self.ports = [None]*self.size
         self.id = id #Either a number (int) or string that identifies it, mainly so the transporters can reference it in origin or destination.
+        self.AcceptedTrans = None
 
         #Jan's Variables
         self.margin = 0.05
@@ -22,7 +39,8 @@ class VarNode(mesa.Agent):
         self.seller = True #is this node selling?
         self.bidList = []
         self.transbidlist = []
-        self.incoming = 0
+        #self.incoming = 0 WHY was this variable made, it was never meaningfully
+        #used
     
     def buy_price(self):
         inv_prem = self.getInvPrem(0) #price premium (or discount) due to current inventory level
@@ -86,20 +104,37 @@ class VarNode(mesa.Agent):
         #unused so far
         return min(self.bidList)
 
-    def acceptBid(self, amount):
+    def acceptBid(self, trans):
         self.bidList = []
         self.transbidlist = []
-        self.incoming = amount
+        self.AcceptedTrans = trans
+        self.AcceptedTrans.dest = self
+        #self.incoming = amount
+        #print("self.incoming is " + self.incoming)
 
     def bidComplete(self):
-        self.incoming = 0
+        #self.incoming = 0
         self.bidList = []
 
         return
 
+    def Consumption(self):
+        return
+
     #Define step and/or advance functions
     def step(self):
+        self.Consumption()
+        t = random.randint(0,1)
+        #0 = buy, 1 = sell from transporter POV
+        if t:
+            price = self.AcceptedTrans.sellprice(self)
+        else:
+            price = self.AcceptedTrans.buyprice()
         #step function to move agent forward in its time step NOTE: use mesa scheduler
+        self.AcceptedTrans.transact(self, price, t) #FILL IN
+        Phys.StepOrbit(self,dt)
+        print(self.id + " has been stepped")
+
         return
 
 
@@ -108,7 +143,7 @@ class FixNode(VarNode): #fixed node class, inherit from VarNode
         super().__init__(Location, OrbitPars, resource, size, id, model)
         self.consume_rate = c_rate #rate of resource consumption, negative for resource supplier
 
-    def step(self):
+    def Consumption(self):
         self.resource = self.resource - self.consume_rate
         if(self.resource < 0):
             self.resource = 0
@@ -123,20 +158,25 @@ class Transporter(mesa.Agent):
         self.resource = resource #floating point variable reflecting amount
         self.loc = loc # (x,y) tupleof cartesian coordinates
         self.orig  = orig #id of most recent originating node
-        self.dest = dest #id of destination node
+        self.dest = dest # destination node OBJECT
         self.operator = operator #id of operating company.
         self.Current_Node = self.orig #JUST A STRING
         self.id = id
         self.avail = 1 #1 is available, 0 is unavailable
-        
+        self.orbitParams = None #will be inherited form node after first bidding phase
         #Jan's variables
         self.resourceValue = -1 #current value/resource (includes value add)
         self.capacity = 100 #total capacity level
         self.margin = 0.05 #desired margin
+        self.model = model
 
     def Dock(self, Node):
         self.loc = Node.loc
-        self.orig = Node.id
+#        self.orig = Node.id
+        self.Current_Node = Node.id
+        self.orbitParams = Node.OrbitPars
+        print(self.id + " has docked at " + Node.id)
+
         return
     
     def transact(self, Node, price, t): #conduct a transaction
@@ -176,4 +216,18 @@ class Transporter(mesa.Agent):
 
     def step(self):
         # step function to move agent forward in its time step NOTE: use mesa scheduler
+        TOF = Phys.ComputeTransfer(NodeLookup(self.Current_Node,self.model.NodeAglist),self.dest)['TOF']
+
+        TOF_steps = int(TOF/dt)
+
+        if TOF_steps == 0:
+            self.Dock((self.dest))
+
+            self.Dest = None
+            self.avail = 1
+
+        else:
+            TOF_steps -= 1
+            print(self.id +" waiting for " + str(TOF_steps) + " more steps")
+
         return

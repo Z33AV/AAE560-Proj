@@ -48,4 +48,6 @@ print(TList)
 #ACTUAL MODEL SETUP
 new_model = OverallModel(FnList,VnList,TList)
 
-new_model.step()
+simTime =  24 #number of half-hours (dts) to run sim for
+for i in range(0,simTime):
+    new_model.step()

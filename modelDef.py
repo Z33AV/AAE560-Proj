@@ -26,6 +26,7 @@ class OverallModel(mesa.Model):
         self.FnList = fixNodes
         self.NodeAglist =[]
         self.TransAglist = []
+        self.FirstStepFlag = 1
 
         for i in self.FnList:
             a = Agents.FixNode( (int(i[1]), int(i[2]) ), {"a": None, "ex": None, "ey": None, "i": None, "RAAN": None, "f": None,}, int(i[3]), int(i[4]), i[0], self, 1 )
@@ -44,7 +45,8 @@ class OverallModel(mesa.Model):
 
         #transporter init loop should inherit orbit params from orig node.
         for i in self.Tlist:
-            a = Agents.Transporter(int(i[1]),(int(i[2]),int(i[3])), i[4], i[5],i[6],i[0],self)
+            a = Agents.Transporter(int(i[1]),(int(i[2]),int(i[3])), i[4], None ,i[6],i[0],self)
+            a.Dock(NodeLookup(a.Current_Node,self.NodeAglist))
             self.schedule.add(a)
             self.TransAglist.append(a)
             print("Agent " + a.id + " added to schedule with origin "+a.Current_Node)
@@ -108,8 +110,12 @@ class OverallModel(mesa.Model):
 
 
     def step(self):
+        if not self.FirstStepFlag:
+            for i in self.NodeAglist:
+                i.step()
         self.ContractingPhase()
-
+        for j in self.TransAglist:
+            j.step()
         return
 
 
