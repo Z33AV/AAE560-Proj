@@ -66,6 +66,10 @@ def ComputeTransfer(origin,dest):
         # 5 deg tolerance for transfer geometry 
         if abs(phi - ang)*180/math.pi <= 5: 
             calcTransfer = 1
+        else:
+            calcTransfer = 0
+            dv_tot = -1
+            tof = -1
     except:
         calcTransfer = 0
         tof = -1
