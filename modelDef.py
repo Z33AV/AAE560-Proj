@@ -50,7 +50,7 @@ class OverallModel(mesa.Model):
             self.schedule.add(a)
             self.TransAglist.append(a)
             print("Agent " + a.id + " added to schedule with origin "+a.Current_Node)
-
+        print("INIT COMPLETE \n")
 
 
     def ContractingPhase(self):
@@ -63,19 +63,22 @@ class OverallModel(mesa.Model):
         #ALL Agents make initial bids
         for i in self.TransAglist:
             targetNode = NodeLookup(i.Current_Node,self.NodeAglist) #defaulting targetNode to current, so that default decision is to stay.
-            for j in self.NodeAglist:
-                if (j.id.lower() != i.Current_Node.lower()):
-                    tempTransferParams = Phys.ComputeTransfer(NodeLookup(i.Current_Node,self.NodeAglist),j)
-                else:
-                    pass
+            if i.avail:
+                for j in self.NodeAglist:
+                    if (j.id.lower() != i.Current_Node.lower()):
+                        tempTransferParams = Phys.ComputeTransfer(NodeLookup(i.Current_Node,self.NodeAglist),j)
+                    else:
+                        pass
 
-                if (tempTransferParams['isPossible'] ==1) and (tempTransferParams['dV']<=currentTransferParams['dV']):
-                    targetNode = j
-                    currentTransferParams = tempTransferParams
-                else:
-                    pass
-            i.makeBids(targetNode,currentTransferParams['TOF'])
-            print("Transporter " + i.id + " bids on node " +targetNode.id)
+                    if (tempTransferParams['isPossible'] ==1) and (tempTransferParams['dV']<=currentTransferParams['dV']):
+                        targetNode = j
+                        currentTransferParams = tempTransferParams
+                    else:
+                        pass
+                i.makeBids(targetNode,currentTransferParams['TOF'])
+                print("Transporter " + i.id + " bids on node " +targetNode.id)
+            else:
+                print("Transport " + i.id + " is unavailable and not bidding")
 
 
         for i in self.NodeAglist:
@@ -88,6 +91,7 @@ class OverallModel(mesa.Model):
                 i.acceptBid(AcceptedTransport)
                 print("node " + i.id +" has accepted the bid from transporter " +AcceptedTransport.id)
                 AcceptedTransport.avail = 0
+                AcceptedTransport.compute = 1
                 #function calls to AcceptedTransport to prepare it for journey without stepping
 
             else:

@@ -169,6 +169,7 @@ class Transporter(mesa.Agent):
         self.capacity = 100 #total capacity level
         self.margin = 0.05 #desired margin
         self.model = model
+        self.compute = 0
 
     def Dock(self, Node):
         self.loc = Node.loc
@@ -215,19 +216,24 @@ class Transporter(mesa.Agent):
         self.dest.Reserve(self) #broken because self.dest is a stringof the destination id, not the actual object
 
     def step(self):
+       TOF = 0 #default value
         # step function to move agent forward in its time step NOTE: use mesa scheduler
-        TOF = Phys.ComputeTransfer(NodeLookup(self.Current_Node,self.model.NodeAglist),self.dest)['TOF']
+       if self.compute:
+            TOF = Phys.ComputeTransfer(NodeLookup(self.Current_Node,self.model.NodeAglist),self.dest)['TOF']
+            self.compute = 0
+        #need to decide when to recalulate and when not, right now it recalculates every single time which is forcing the trnsporter to be infinitely waiting
 
-        TOF_steps = int(TOF/dt)
+       TOF_steps = int(TOF/dt)
 
-        if TOF_steps == 0:
+       if TOF_steps == 0:
             self.Dock((self.dest))
 
             self.Dest = None
             self.avail = 1
 
-        else:
+
+       else:
             TOF_steps -= 1
             print(self.id +" waiting for " + str(TOF_steps) + " more steps")
 
-        return
+       return
