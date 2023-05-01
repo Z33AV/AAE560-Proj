@@ -12,11 +12,6 @@ def NodeLookup(str, list):
     print("ERROR 69420 -> no node with matchin id to requested lookup")
     return
 
-
-
-
-
-
 class OverallModel(mesa.Model):
 
     def __init__(self, fixNodes, varNodes, transports): #note that these inputs are CSV FILES read in in MAIN
@@ -121,10 +116,3 @@ class OverallModel(mesa.Model):
         for j in self.TransAglist:
             j.step()
         return
-
-
-
-
-
-
-

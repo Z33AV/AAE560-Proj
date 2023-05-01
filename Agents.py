@@ -10,49 +10,56 @@ import Phys
 #from modelDef import NodeLookup
 
 #Aux node lookup function
-def NodeLookup(str, list):
+def NodeLookup(s, l):
     #list is  a list of nodes
     #output = None
-    for i in list:
-        if (i.id.lower() == str.lower()):
+    for i in l:
+        if (i.id.lower() == s.lower()):
             return i
     print("ERROR 69420 -> no node with matchin id to requested lookup")
     return
 
 #print("This is the agents file")
 # CONSTANT
-dt = 1800 #seconds
+dt = 1800 #timestep in seconds
 class VarNode(mesa.Agent):
-    def __init__(self,Location,OrbitPars,resource,size,id,model):
+    def __init__(self,Location,OrbitPars,resource,size,id,operator,model, capacity, econ_type):
         super().__init__(id, model)
         self.loc = Location #tuple of floats (x,y) coordinates
         self.OrbitPars = OrbitPars #Dictionary of structure {"a": float, "ex": float, "ey": float, "i": float, "RAAN": float, "f": true anomaly}
         self.resource = resource #float
-        self.size = size #maximum number of spaces/docking ports, of type int
-        self.ports = [None]*self.size
+        self.num_ports = size #maximum number of spaces/docking ports, of type int
+        self.ports = [None]*self.num_ports
         self.id = id #Either a number (int) or string that identifies it, mainly so the transporters can reference it in origin or destination.
         self.AcceptedTrans = None
-
+        self.operator = operator
+        
         #Jan's Variables
         self.margin = 0.05
         self.baseprice = -1
-        self.capacity = 100 #Maximum capacity of node in units of resource
-        self.buyer = True #is this node buying?
-        self.seller = True #is this node selling?
+        self.capacity = capacity #Maximum capacity of node in units of resource
+        if(econ_type == 0): #indicates variable node (buyer and seller)
+            self.buyer = True #is this node buying?
+            self.seller = True #is this node selling?
+        elif(econ_type == 1): #indicates buyer fixed node
+            self.buyer = True
+            self.seller = False
+        else: #indicates seller fixed node
+            self.buyer = False
+            self.seller = True
+
         self.bidList = []
         self.transbidlist = []
-        #self.incoming = 0 WHY was this variable made, it was never meaningfully
-        #used
     
     def buy_price(self):
-        inv_prem = self.getInvPrem(0) #price premium (or discount) due to current inventory level
-        price = self.price * inv_prem #compute purchase price
+        prem = self.getPrem(0)
+        price = self.baseprice * prem #compute purchase price
         return price
     
     def sell_price(self, trans):
-        inv_prem = self.getInvPrem(1) #price premium (or discount) due to current inventory level
-        price = self.price * inv_prem
-        if(trans.operator != self.operator):
+        prem = self.getPrem(1) #price premium (or discount) due to current inventory level
+        price = self.baseprice * prem
+        if(trans.operator.lower() != self.operator.lower()):
             price = price * self.margin #account for margin when selling "out of network"
         return price
     
@@ -71,7 +78,7 @@ class VarNode(mesa.Agent):
         self.resource = self.resource + quantity
         return price * quantity
     
-    def getInvPrem(self, t): #t: 0 = buy, 1 = sell
+    def getPrem(self, t): #t: 0 = buy, 1 = sell
         prem = 1
         inv = self.resource/self.capacity
         if(t == 0): #indicates a buy price check
@@ -141,8 +148,8 @@ class VarNode(mesa.Agent):
 
 
 class FixNode(VarNode): #fixed node class, inherit from VarNode
-    def __init__(self, Location, OrbitPars, resource, size, id, model, c_rate):
-        super().__init__(Location, OrbitPars, resource, size, id, model)
+    def __init__(self, Location, OrbitPars, resource, size, id, operator, model, c_rate):
+        super().__init__(Location, OrbitPars, resource, size, id, operator, model)
         self.consume_rate = c_rate #rate of resource consumption, negative for resource supplier
 
     def Consumption(self):
@@ -167,11 +174,20 @@ class Transporter(mesa.Agent):
         self.avail = 1 #1 is available, 0 is unavailable
         self.orbitParams = None #will be inherited form node after first bidding phase
         #Jan's variables
-        self.resourceValue = -1 #current value/resource (includes value add)
+        self.current_price = -1
         self.capacity = 100 #total capacity level
         self.margin = 0.05 #desired margin
         self.model = model
         self.compute = 0
+        self.fuel_reserve = 0.2
+        
+        #state definition
+        #0 -> available
+        #1 -> acquiring resources
+        #2 -> delivering resources
+        #3 -> moving to seller
+
+        self.state = 0 #all transporters begin as available
 
     def Dock(self, Node):
         self.loc = Node.loc
@@ -196,14 +212,14 @@ class Transporter(mesa.Agent):
     
     def sellprice(self, Node): #check sale price
         prem = self.compPrems(1) #price premium (or discount) due to current inventory level
-        price = self.price * prem
+        price = self.current_price * prem
         if(Node.operator != self.operator):
             price = price * self.margin #account for margin when selling "out of network"
         return price
     
     def buyprice(self): #check buy price
         prem = self.compPrems(0) #price premium (or discount) due to current inventory level
-        price = self.price * prem #compute purchase price
+        price = self.current_price * prem #compute purchase price
         return price
     
     def compPrems(self, t): #t = 0 -> buy (transporter POV), t = 1 -> sell (transporter POV)
@@ -218,6 +234,21 @@ class Transporter(mesa.Agent):
         self.dest.Reserve(self) #broken because self.dest is a stringof the destination id, not the actual object
 
     def step(self):
+       if(self.state == 2): #delivering resources phase
+           if(TOF_remain > 0):
+               TOF_remain = TOF_remain - 1 #step forward one stage
+               return #all I need to do for now
+           else:
+               self.state = 3
+               pass #behavior for arriving at node & making sale
+       elif(self.state == 3):
+           pass #behavior for moving to 'best' seller node
+       elif(self.state == 1):
+           pass #buy some resources
+       elif(self.state == 0):
+           pass #participate in bidding
+       else:
+           print("STATE ERROR")
        TOF = 0 #default value
         # step function to move agent forward in its time step NOTE: use mesa scheduler
        if self.compute:
