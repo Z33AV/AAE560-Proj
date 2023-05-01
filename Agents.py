@@ -4,6 +4,8 @@ import random
 
 import mesa
 
+#test msg - checkout switched to EconV2
+
 import Phys
 #from modelDef import NodeLookup
 
