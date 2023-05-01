@@ -13,7 +13,6 @@ def NodeLookup(s, l):
     return
 
 class OverallModel(mesa.Model):
-
     def __init__(self, fixNodes, varNodes, transports): #note that these inputs are CSV FILES read in in MAIN
         self.schedule = mesa.time.RandomActivation(self)
         self.VnList = varNodes
@@ -33,7 +32,7 @@ class OverallModel(mesa.Model):
             print("Agent " + a.id + " added to schedule")
 
         for i in self.VnList:
-            a = Agents.Node((float(i[1]), float(i[2])), {"a": None, "ex": None, "ey": None, "i": None, "RAAN": None, "f": None,}, float(i[3]), float(i[4]), str(i[0]), str(i[5]), self, float(i[6]), float(i[7]), 0, False)
+            a = Agents.Node((float(i[1]), float(i[2])), {"a": None, "ex": None, "ey": None, "i": None, "RAAN": None, "f": None,}, float(i[3]), float(i[4]), str(i[0]), str(i[5]), self, float(i[6]), 0.0, 0, False)
             Phys.PlaceNode(a)
             self.schedule.add(a)
             self.NodeAglist.append(a)
@@ -51,17 +50,14 @@ class OverallModel(mesa.Model):
 
 
     def ContractingPhase(self):
-        #Function to complete the entire bidding and contracting process
-
-        tempTransferParams = {"isPossible": 0, "dV": -1, "TOF": -1}
-
+        #Function to complete the entire bidding and contracting process except final acceptance (transporter step)
         #ALL Agents make initial bids
         for i in self.TransAglist:
             if i.state == 0: #only available transporters make bids
                 for j in self.NodeAglist:
-                    if (j.buyer and (j.id.lower() != i.Current_Node.lower())):
+                    if (j.buyer and (j.id.lower() != i.Current_Node.lower())): #don't bid on my current node or nodes that do not buy
                         tempTransferParams = Phys.ComputeTransfer(i.Current_Node,j)
-                        if (tempTransferParams['isPossible'] ==1) and (i.Profit(j) > 0):
+                        if (tempTransferParams['isPossible'] ==1) and (i.Profit(j) > 0): #bid if possible and profitable
                             i.makeBids(j,tempTransferParams['TOF'])
                             print("Transporter " + i.id + " bids on node " +j.id)
             else:

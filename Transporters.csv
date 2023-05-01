@@ -1,4 +1,2 @@
-id,resource_lvl,orig,operator
-TestTrans1,2000,6628,6628,VarTest1,FixTest1,SpaceY
-TestTrans2,1000,6728,6498,VarTest2,FixTest2,RedOrigin
-TestTrans3,0,6678,6578,FixTest1,VarTest1,ChadGalactic
+﻿id,resource_lvl,orig,operator
+T1,0.4,LeoDepot,Arryn

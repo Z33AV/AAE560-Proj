@@ -1,6 +1,4 @@
 #File containing Agent class definitions and methods
-import math
-import random
 import mesa
 import Phys
 
@@ -18,7 +16,7 @@ def NodeLookup(s, l):
 # CONSTANT
 
 class Node(mesa.Agent):
-    def __init__(self,Location,OrbitPars,capacity,resource_lvl,id,operator,model,c_rate,price,econ_type,fixed):
+    def __init__(self,Location,OrbitPars,capacity,resource_lvl,id,operator,model,price,c_rate,econ_type,fixed):
         super().__init__(id, model)
         #input parameters
         self.loc = Location #tuple of floats (x,y) coordinates
@@ -27,7 +25,7 @@ class Node(mesa.Agent):
         self.resource = resource_lvl*self.capacity
         self.id = id #Either a number (int) or string that identifies it, mainly so the transporters can reference it in origin or destination.
         self.operator = operator
-        self.consume_rate = c_rate #rate of resource consumption, negative for resource supplier
+        self.consume_rate = c_rate/((24*60*60)/model.time_step) #rate of resource consumption, negative for resource supplier, normalized to per day consumption rate
         self.baseprice = price
         self.fixed = fixed
 

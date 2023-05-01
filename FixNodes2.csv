@@ -1,0 +1,8 @@
+﻿id,x,y,capacity,resource_lvl,operator,price,consumption rate (normalized per day),econ_type
+DSG,-192200,332900.1652,250,0.25,NASA,4,0.05,1
+ISS,3400,5888.972746,200,0.7,NASA,2,0.15,1
+GeoSSP,-6077.686218,34468.27136,300,0.5,Ziyan,3.5,0.1,1
+LeoDepot,5802.370205,3350,1000,1,Sarah,1,-1,2
+SolarPanels,6761.480784,1811.733316,200,0.2,Daniel,2,0.1,1
+LeoSSP,6873.743417,601.374625,500,0.6,Geoffrey,2.25,0.2,1
+Factory,1414.213562,1414.213562,500,0.4,Jamie,2.5,0.25,1

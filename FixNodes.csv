@@ -1,4 +1,4 @@
-id,locx,locy,capacity,resource_lvl,operator,c_rate,price,econ_type
+id,locx,locy,capacity,resource_lvl,operator,price,c_rate,econ_type
 DSG,-192200,332900.1652,200,4
 ISS,3400,5888.972746,4000,4
 GeoSSP,-6077.686218,34468.27136,-1,4

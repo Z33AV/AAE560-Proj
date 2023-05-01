@@ -1,3 +1,1 @@
-id,locx,locy,capacity,resource_lvl,operator,c_rate,price
-VarTest1,6578,6728,100,6
-VarTest2,7178,7328,50,2
+﻿id,x,y,capacity,resource_lvl,operator,price
