@@ -42,10 +42,10 @@ class OverallModel(mesa.Model):
         #transporter init loop should inherit orbit params from orig node.
         for i in self.Tlist:
             a = Agents.Transporter(float(i[1]),NodeLookup(str(i[2]), self.NodeAglist), str(i[3]), str(i[0]),self)
-            a.Dock(NodeLookup(a.Current_Node,self.NodeAglist))
+            a.Dock(a.Current_Node)
             self.schedule.add(a)
             self.TransAglist.append(a)
-            print("Agent " + a.id + " added to schedule with origin "+a.Current_Node)
+            print("Agent " + a.id + " added to schedule with origin "+a.Current_Node.id)
         print("INIT COMPLETE \n")
 
 
@@ -55,9 +55,9 @@ class OverallModel(mesa.Model):
         for i in self.TransAglist:
             if i.state == 0: #only available transporters make bids
                 for j in self.NodeAglist:
-                    if (j.buyer and (j.id.lower() != i.Current_Node.lower())): #don't bid on my current node or nodes that do not buy
+                    if (j.buyer and (j.id.lower() != i.Current_Node.id.lower())): #don't bid on my current node or nodes that do not buy
                         tempTransferParams = Phys.ComputeTransfer(i.Current_Node,j)
-                        if (tempTransferParams['isPossible'] ==1) and (i.Profit(j) > 0): #bid if possible and profitable
+                        if (tempTransferParams['isPossible'] ==1) and (i.profit(j) > 0): #bid if possible and profitable
                             i.makeBids(j,tempTransferParams['TOF'])
                             print("Transporter " + i.id + " bids on node " +j.id)
             else:
@@ -69,7 +69,7 @@ class OverallModel(mesa.Model):
             if minTOF < 0: #no bids made on this node
                 continue
             ind = i.bidList.index(minTOF)
-            i.transBidList(ind).acceptedBid(i)
+            i.transbidlist[ind].acceptedBid(i)
         return
 
 

@@ -144,7 +144,7 @@ class Transporter(mesa.Agent):
         #self.orig  = orig #id of most recent originating node
         self.dest = None # destination node OBJECT
         self.operator = operator #id of operating company.
-        self.Current_Node = orig #JUST A STRING
+        self.Current_Node = orig #Set the starting node
         self.loc = self.Current_Node.loc # (x,y) tupleof cartesian coordinates
         self.id = id
         self.orbitParams = None #will be inherited form node after first bidding phase
@@ -173,7 +173,7 @@ class Transporter(mesa.Agent):
     def Dock(self, node):
         self.loc = node.loc
         node.Dock(self)
-        self.Current_Node = node.id
+        self.Current_Node = node
         self.orbitParams = node.OrbitPars
         print(self.id + " has docked at " + node.id)
 
@@ -235,7 +235,7 @@ class Transporter(mesa.Agent):
     def find_seller(self):
         opts = []
         opt_vs = []
-        for i in self.model.NodeAgList:
+        for i in self.model.NodeAglist:
             if(i.seller):
                 tmp = Phys.ComputeTransfer(self.Current_Node, i)
                 if(tmp['isPossible']):
@@ -246,11 +246,11 @@ class Transporter(mesa.Agent):
             return
         ind = opt_vs.index(max(opt_vs))
         self.dest = opts[ind]
-        self.unDock()
         tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest)
         self.TOF_remain = tsfr['TOF'] #compute and store time of flight
         self.resource = self.resource - tsfr['dV']/self.fuel_economy #use resources to transfer
         self.state = 3 #increment state appropriately
+        self.unDock()
 
     def step(self):
         if(self.idle > 0): #allow idling
@@ -260,7 +260,7 @@ class Transporter(mesa.Agent):
             return
         if(self.state == 2): #delivering resources phase
             if(self.TOF_remain > 0):
-                self.TOF_remain = self.TOF_remain - self.model.timeStep #step forward one stage
+                self.TOF_remain = self.TOF_remain - self.model.time_step #step forward one stage
                 return #all I need to do for now
             else:
                 self.Dock(self.dest)
@@ -269,7 +269,7 @@ class Transporter(mesa.Agent):
                 self.state = 4 #move to stuck state & seek seller
         elif(self.state == 3):
             if(self.TOF_remain > 0): #in transit to seller
-                self.TOF_remain = self.TOF_remain - self.model.timeStep
+                self.TOF_remain = self.TOF_remain - self.model.time_step
             else: #arrived at seller - ready for next bid
                 self.Dock(self.dest) #Dock at seller node
                 self.dest = None
@@ -279,6 +279,7 @@ class Transporter(mesa.Agent):
         elif(self.state == 1):
             self.transact(self.Current_Node, 1)
             self.state = 2
+            self.unDock()
         elif(self.state == 0):
             if(len(self.dest_opts) < 1):
                 return #no accepted bids
@@ -293,10 +294,9 @@ class Transporter(mesa.Agent):
                 if(best is None):
                     print("Error: Failed to Assign Dest Node")
                 else:
-                    best.reserve(self) #tell the node I accept and am on my way
+                    best.Reserve(self.capacity*(1-self.fuel_reserve)) #tell the node I accept and am on my way
                     self.state = 1 #move to next state
                     self.dest = best
-                    self.unDock()
                     tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest) #get transfer details
                     self.TOF_remain = tsfr['TOF']
                     self.resource = self.resource - tsfr['dV']/self.fuel_economy
