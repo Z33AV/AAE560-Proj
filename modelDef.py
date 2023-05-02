@@ -110,15 +110,15 @@ class OverallModel(mesa.Model):
         make_my_dir(root_path+run_name+vn_fold)
 
         #open main files for writing
-        self.main_output = open(root_path+run_name+main_log, 'w')
-        self.ledger = open(root_path+run_name+ledger_name, 'w')
+        self.main_output = open(root_path+run_name+main_log, 'rw')
+        self.ledger = open(root_path+run_name+ledger_name, 'rw')
         self.ledger.write("Time,Transporter,Node,TT,Quantity,Price,Value")
 
         #open transporter files for writing
         for t in self.TransAglist:
             fname = t.id+".csv"
             make_my_dir(fname)
-            f = open(root_path+run_name+t_fold+fname, 'w')
+            f = open(root_path+run_name+t_fold+fname, 'rw')
             f.write("Time,state,curr_node,dest_node,remaining_TOF,resources,capacity,buy_prem,sell_prem")
             self.trans_files.append(f)
         
@@ -131,7 +131,7 @@ class OverallModel(mesa.Model):
                 fold = vn_fold
             tmp = root_path+run_name+fold+fname
             make_my_dir(tmp)
-            f = open(tmp, 'w')
+            f = open(tmp, 'rw')
             f.write("Time,x,y,resources,capacity,ports_filled,buy_prem,sell_prem")
             self.node_files.append(f)
 
