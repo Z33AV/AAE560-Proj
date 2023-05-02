@@ -82,7 +82,8 @@ class Node(mesa.Agent):
             led_str = led_str+"s,"
             price = self.sell_price(trans)
         self.resource = self.resource + quantity
-        led_str = led_str+str(quantity)+","+str(price)+","+str(price * abs(quantity))
+        led_str = led_str+str(quantity)+","+str(price)+","+str(price * abs(quantity))+"\n"
+        self.model.ledger.write(led_str)
         return price * quantity
     
     def getPrem(self, t): #t: 0 = buy, 1 = sell
@@ -140,7 +141,7 @@ class Node(mesa.Agent):
         return
     
     def step_output(self):
-        return str(self.model.model_time)+","+str(self.loc[0])+","+str(self.loc[1])+","+str(self.resource)+","+str(self.capacity)+","+str(len(self.ports))+","+str(self.getPrem(0))+","+str(self.getPrem(1))
+        return str(self.model.model_time)+","+str(self.loc[0])+","+str(self.loc[1])+","+str(self.resource)+","+str(self.capacity)+","+str(len(self.ports))+","+str(self.getPrem(0))+","+str(self.getPrem(1))+"\n"
 
     #Define step and/or advance functions
     def step(self):
@@ -270,7 +271,7 @@ class Transporter(mesa.Agent):
         print(self.id+" found seller: "+self.dest.id)
     
     def step_output(self):
-        return str(self.model.model_time)+","+str(self.state)+","+node2str(self.Current_Node)+","+node2str*self.dest+","+str(self.TOF_remain)+","+str(self.resource)+","+str(self.capacity)+","+str(self.compPrems(0))+","+str(self.compPrems(1))
+        return str(self.model.model_time)+","+str(self.state)+","+node2str(self.Current_Node)+","+node2str(self.dest)+","+str(self.TOF_remain)+","+str(self.resource)+","+str(self.capacity)+","+str(self.compPrems(0))+","+str(self.compPrems(1))+"\n"
 
     def step(self):
         if(self.idle > 0): #allow idling

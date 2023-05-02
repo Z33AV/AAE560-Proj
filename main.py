@@ -31,8 +31,6 @@ with open("VarNodes.csv") as f1:
 #print(VnList)
 #print("\n")
 
-
-
 with open("Transporters.csv") as f2:
     TList = []
     reader2 = csv.reader(f2, delimiter = ",")

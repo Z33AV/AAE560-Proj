@@ -92,7 +92,7 @@ class OverallModel(mesa.Model):
 
     def start_collection(self): #start data collection
         #define file paths
-        root_path = "/Users/jbalk/Documents/560_Project_Runs/"
+        root_path = "./560_Project_Runs/"
         run_name = "Run_1/"
         ledger_name = "ledger.csv"
         main_log = "main_log.txt"
@@ -110,16 +110,16 @@ class OverallModel(mesa.Model):
         make_my_dir(root_path+run_name+vn_fold)
 
         #open main files for writing
-        self.main_output = open(root_path+run_name+main_log, 'rw')
-        self.ledger = open(root_path+run_name+ledger_name, 'rw')
-        self.ledger.write("Time,Transporter,Node,TT,Quantity,Price,Value")
+        self.main_output = open(root_path+run_name+main_log, 'w')
+        self.ledger = open(root_path+run_name+ledger_name, 'w')
+        self.ledger.write("Time,Transporter,Node,TT,Quantity,Price,Value\n")
 
         #open transporter files for writing
         for t in self.TransAglist:
             fname = t.id+".csv"
             make_my_dir(fname)
-            f = open(root_path+run_name+t_fold+fname, 'rw')
-            f.write("Time,state,curr_node,dest_node,remaining_TOF,resources,capacity,buy_prem,sell_prem")
+            f = open(root_path+run_name+t_fold+fname, 'w')
+            f.write("Time,state,curr_node,dest_node,remaining_TOF,resources,capacity,buy_prem,sell_prem\n")
             self.trans_files.append(f)
         
         #open node files for writing
@@ -131,8 +131,8 @@ class OverallModel(mesa.Model):
                 fold = vn_fold
             tmp = root_path+run_name+fold+fname
             make_my_dir(tmp)
-            f = open(tmp, 'rw')
-            f.write("Time,x,y,resources,capacity,ports_filled,buy_prem,sell_prem")
+            f = open(tmp, 'w')
+            f.write("Time,x,y,resources,capacity,ports_filled,buy_prem,sell_prem\n")
             self.node_files.append(f)
 
 
@@ -146,13 +146,13 @@ class OverallModel(mesa.Model):
 
     def step(self):
         self.ContractingPhase()
-        for j in self.TransAglist:
-            j.step()
-            ind = self.TransAglist.index(j)
-            self.trans_files[ind].write(j.step_output())
-        for i in self.NodeAglist:
-            i.step()
-            ind = self.NodeAglist.index(j)
-            self.node_files[ind].write(i.step_output())
+        for j in range(len(self.TransAglist)):
+            t = self.TransAglist[j]
+            t.step()
+            self.trans_files[j].write(t.step_output())
+        for i in range(len(self.NodeAglist)):
+            n = self.NodeAglist[i]
+            n.step()
+            self.node_files[i].write(n.step_output())
         self.model_time = self.model_time + self.time_step
         return
