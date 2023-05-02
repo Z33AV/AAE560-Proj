@@ -17,8 +17,9 @@ def make_my_dir(filename): #creates directory if it does not already exist
     if(not os.path.exists(os.path.dirname(filename))):
         try:
             os.makedirs(os.path.dirname(filename))
-        except OSError:
+        except OSError as exc:
             print("Error making: "+filename)
+            print(exc)
 
 class OverallModel(mesa.Model):
     def __init__(self, fixNodes, varNodes, transports): #note that these inputs are CSV FILES read in in MAIN
@@ -91,7 +92,7 @@ class OverallModel(mesa.Model):
 
     def start_collection(self): #start data collection
         #define file paths
-        root_path = "/Users/jbalk/Documents/Purdue MSAA/AAE 560/Project/"
+        root_path = "/Users/jbalk/Documents/560_Project_Runs/"
         run_name = "Run_1/"
         ledger_name = "ledger.csv"
         main_log = "main_log.txt"
