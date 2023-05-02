@@ -67,10 +67,14 @@ class Node(mesa.Agent):
     
     def max_amt(self, t): #returns the maximum allowable resource transfer based on inventory constraints
         #t = 0 -> buy, t = 1 -> sell
-        if(t == 0):
+        if(t == 1):
+            print("a")
+            print(self.resource)
             return self.resource #can't sell more than I have
         else:
-            return self.capacity-(self.resource+self.incoming) #can't buy more than I have space for (including contracted purchases)
+            print("b")
+            print(self.capacity-(self.resource))
+            return self.capacity-(self.resource) #can't buy more than I have space for (including contracted purchases)
     
     def transact(self, trans, quantity): #returns the money exchange associated with the transaction
         led_str = str(self.model.model_time)+","+trans.id+","+self.id+"," #string for the ledger entry
@@ -169,7 +173,7 @@ class Transporter(mesa.Agent):
         self.model = model
         self.compute = 0
         self.fuel_reserve = 0.2
-        self.fuel_economy = 100 #dV/resource achievable by transporters
+        self.fuel_economy = 5 #dV/resource achievable by transporters
         self.idle = 0 #current idle time is 0
         
         #state definition
@@ -193,6 +197,7 @@ class Transporter(mesa.Agent):
     def transact(self, node, t): #conduct a transaction
         #t = 0 -> buy, t = 1 -> sell (Node POV!!)
         print("\n")
+        print(node.max_amt(t))
         if(t == 0): #sell resources to node
             tmp = self.resource - (self.fuel_reserve * self.capacity)
             amount = min(node.max_amt(t), tmp)
@@ -299,6 +304,8 @@ class Transporter(mesa.Agent):
             self.find_seller() #look for a seller I can move to
         elif(self.state == 1):
             self.transact(self.Current_Node, 1)
+            tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest) #get transfer details
+            self.resource = self.resource - tsfr['dV']/self.fuel_economy
             self.state = 2
             self.unDock()
         elif(self.state == 0):
@@ -307,7 +314,7 @@ class Transporter(mesa.Agent):
                 return #no accepted bids
             else:
                 max_p = -1
-                best = None
+                best = self.dest_opts[0]
                 for n in self.dest_opts:
                     tp = self.profit(n)
                     if(tp > max_p): #find most profitable function
@@ -322,7 +329,6 @@ class Transporter(mesa.Agent):
                     self.dest = best
                     tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest) #get transfer details
                     self.TOF_remain = tsfr['TOF']
-                    self.resource = self.resource - tsfr['dV']/self.fuel_economy
         else:
             print("STATE ERROR")
         return
