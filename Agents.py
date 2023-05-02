@@ -12,18 +12,23 @@ def NodeLookup(s, l):
     print("ERROR 69420 -> no node with matchin id to requested lookup")
     return
 
+def node2str(node):
+    if(node is None):
+        return "None"
+    else:
+        return node.id
 #print("This is the agents file")
 # CONSTANT
 
 class Node(mesa.Agent):
-    def __init__(self,Location,OrbitPars,capacity,resource_lvl,id,operator,model,price,c_rate,econ_type,fixed):
-        super().__init__(id, model)
+    def __init__(self,Location,OrbitPars,capacity,resource_lvl,iid,operator,model,price,c_rate,econ_type,fixed):
+        super().__init__(iid, model)
         #input parameters
         self.loc = Location #tuple of floats (x,y) coordinates
         self.OrbitPars = OrbitPars #Dictionary of structure {"a": float, "ex": float, "ey": float, "i": float, "RAAN": float, "f": true anomaly}
         self.capacity = capacity #Maximum capacity of node in units of resource
         self.resource = resource_lvl*self.capacity
-        self.id = id #Either a number (int) or string that identifies it, mainly so the transporters can reference it in origin or destination.
+        self.id = iid #Either a number (int) or string that identifies it, mainly so the transporters can reference it in origin or destination.
         self.operator = operator
         self.consume_rate = c_rate/((24*60*60)/model.time_step) #rate of resource consumption, negative for resource supplier, normalized to per day consumption rate
         self.baseprice = price
@@ -68,12 +73,16 @@ class Node(mesa.Agent):
             return self.capacity-(self.resource+self.incoming) #can't buy more than I have space for (including contracted purchases)
     
     def transact(self, trans, quantity): #returns the money exchange associated with the transaction
+        led_str = str(self.model.model_time)+","+trans.id+","+self.id+"," #string for the ledger entry
         if(quantity > 0): #indicates a purchase
+            led_str = led_str+"b,"
             price = self.buy_price()
             self.incoming = self.incoming - quantity #adjust incoming quantity when it is received
         else: #indicates a sale
+            led_str = led_str+"s,"
             price = self.sell_price(trans)
         self.resource = self.resource + quantity
+        led_str = led_str+str(quantity)+","+str(price)+","+str(price * abs(quantity))
         return price * quantity
     
     def getPrem(self, t): #t: 0 = buy, 1 = sell
@@ -123,30 +132,32 @@ class Node(mesa.Agent):
         return
 
     def Consumption(self):
-        self.resource = self.resource - self.consume_rate
+        self.resource = self.resource - self.consume_rate*self.capacity
         if(self.resource < 0):
             self.resource = 0
         elif(self.resource > self.capacity):
             self.resource = self.capacity
         return
+    
+    def step_output(self):
+        return str(self.model.model_time)+","+str(self.loc[0])+","+str(self.loc[1])+","+str(self.resource)+","+str(self.capacity)+","+str(len(self.ports))+","+str(self.getPrem(0))+","+str(self.getPrem(1))
 
     #Define step and/or advance functions
     def step(self):
         self.Consumption()
         Phys.StepOrbit(self,self.model.time_step)
-        print(self.id + " has been stepped")
         return
 
 
 class Transporter(mesa.Agent):
-    def __init__(self, resource_lvl, orig, operator,id, model):
-        super().__init__(id, model)
+    def __init__(self, resource_lvl, orig, operator,iid, model):
+        super().__init__(iid, model)
         #self.orig  = orig #id of most recent originating node
         self.dest = None # destination node OBJECT
         self.operator = operator #id of operating company.
         self.Current_Node = orig #Set the starting node
         self.loc = self.Current_Node.loc # (x,y) tupleof cartesian coordinates
-        self.id = id
+        self.id = iid
         self.orbitParams = None #will be inherited form node after first bidding phase
         self.dest_opts = []
 
@@ -176,21 +187,26 @@ class Transporter(mesa.Agent):
         self.Current_Node = node
         self.orbitParams = node.OrbitPars
         print(self.id + " has docked at " + node.id)
-
         return
     
     def transact(self, node, t): #conduct a transaction
         #t = 0 -> buy, t = 1 -> sell (Node POV!!)
+        print("\n")
         if(t == 0): #sell resources to node
             tmp = self.resource - (self.fuel_reserve * self.capacity)
             amount = min(node.max_amt(t), tmp)
+            print("Transaction: "+self.id+" selling to "+node.id)
         else: #buy resources from node
             amount = min(node.max_amt(t), self.capacity - self.resource)
             amount = amount * -1
+            print("Transaction: "+self.id+" buying from "+node.id)
             self.current_price = (self.current_price*self.resource + (-amount)*node.sell_price(self))/(self.resource - amount) #current price is weighted average of existing and new unit price
         self.resource = self.resource - amount #update my resource stockpile
-        node.transact(self, amount)
-        return self.current_price*amount #return net transaction value to transporter!
+        price = node.transact(self, amount)
+        print("Transaction Value: "+str(price))
+        print("Transaction Volume: "+str(abs(amount)))
+        print("\n")
+        return price #return net transaction value to transporter!
     
     def sellprice(self, node): #check sale price
         prem = self.compPrems(1) #price premium (or discount) due to current inventory level
@@ -251,6 +267,10 @@ class Transporter(mesa.Agent):
         self.resource = self.resource - tsfr['dV']/self.fuel_economy #use resources to transfer
         self.state = 3 #increment state appropriately
         self.unDock()
+        print(self.id+" found seller: "+self.dest.id)
+    
+    def step_output(self):
+        return str(self.model.model_time)+","+str(self.state)+","+node2str(self.Current_Node)+","+node2str*self.dest+","+str(self.TOF_remain)+","+str(self.resource)+","+str(self.capacity)+","+str(self.compPrems(0))+","+str(self.compPrems(1))
 
     def step(self):
         if(self.idle > 0): #allow idling
@@ -282,6 +302,7 @@ class Transporter(mesa.Agent):
             self.unDock()
         elif(self.state == 0):
             if(len(self.dest_opts) < 1):
+                print(self.id+" failed to have any bids accepted")
                 return #no accepted bids
             else:
                 max_p = -1
@@ -295,6 +316,7 @@ class Transporter(mesa.Agent):
                     print("Error: Failed to Assign Dest Node")
                 else:
                     best.Reserve(self.capacity*(1-self.fuel_reserve)) #tell the node I accept and am on my way
+                    print(self.id+" accepted bid on "+best.id)
                     self.state = 1 #move to next state
                     self.dest = best
                     tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest) #get transfer details
