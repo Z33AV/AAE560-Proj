@@ -44,13 +44,12 @@ print(TList)
 
 #ACTUAL MODEL SETUP
 new_model = OverallModel(FnList,VnList,TList)
-new_model.start_collection()
 
-simDur =  7 * 24 * 60 * 60 #number of seconds to run sim for
+simDur =  1 * 24 * 60 * 60 #number of seconds to run sim for
 dts = int(simDur/new_model.time_step)
 print("Beginning Simulation")
 for i in range(0,dts):
-    print("Current Time: +"+str(i))
+    #print("Current Time: +"+str(i))
     new_model.step()
 print("Simulation Complete")
 new_model.close_model()

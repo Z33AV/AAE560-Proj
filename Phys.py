@@ -98,9 +98,9 @@ def PlaceNode(node):
     pos = numpy.array([loc[0],loc[1],0])    # Create (1x3) position vector
     
     orbEls = Cart2Orb(pos)                  # Create dict of orbital elements 
-    node.OrbitPars = orbEls                 # Set agent's orbit parameters 
+    #node.OrbitPars = orbEls                 # Set agent's orbit parameters 
     
-    return 
+    return orbEls
 
 def StepOrbit(obj,dt):
     # Updates position (node or transporter) after dt
@@ -116,11 +116,12 @@ def StepOrbit(obj,dt):
     M = (M0 + n*dt) * 180/math.pi       # Stepped mean anomaly, deg
     
     obj.OrbitPars["f"] = math.fmod(M,360)
+    new_parm  = math.fmod(M,360)
 
     newPosition = Orb2Cart(obj.OrbitPars)
-    obj.loc = newPosition
+    #obj.loc = newPosition #does not work
 
-    return 
+    return newPosition, new_parm
 
 def Cart2Orb(position):
     # Converts the Cartesian position vector [x,y,z] cartesian position vector to orbital elements

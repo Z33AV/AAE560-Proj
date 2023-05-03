@@ -68,12 +68,8 @@ class Node(mesa.Agent):
     def max_amt(self, t): #returns the maximum allowable resource transfer based on inventory constraints
         #t = 0 -> buy, t = 1 -> sell
         if(t == 1):
-            print("a")
-            print(self.resource)
             return self.resource #can't sell more than I have
         else:
-            print("b")
-            print(self.capacity-(self.resource))
             return self.capacity-(self.resource) #can't buy more than I have space for (including contracted purchases)
     
     def transact(self, trans, quantity): #returns the money exchange associated with the transaction
@@ -150,7 +146,7 @@ class Node(mesa.Agent):
     #Define step and/or advance functions
     def step(self):
         self.Consumption()
-        Phys.StepOrbit(self,self.model.time_step)
+        self.loc, self.OrbitPars["f"] = Phys.StepOrbit(self,self.model.model_time)
         return
 
 
@@ -173,7 +169,7 @@ class Transporter(mesa.Agent):
         self.model = model
         self.compute = 0
         self.fuel_reserve = 0.2
-        self.fuel_economy = 5 #dV/resource achievable by transporters
+        self.fuel_economy = 0.1 #dV/resource achievable by transporters
         self.idle = 0 #current idle time is 0
         
         #state definition
@@ -191,27 +187,26 @@ class Transporter(mesa.Agent):
         node.Dock(self)
         self.Current_Node = node
         self.orbitParams = node.OrbitPars
-        print(self.id + " has docked at " + node.id)
+        self.model.main_output.write(self.id + " has docked at " + node.id+"\n")
         return
     
     def transact(self, node, t): #conduct a transaction
         #t = 0 -> buy, t = 1 -> sell (Node POV!!)
-        print("\n")
-        print(node.max_amt(t))
+        self.model.main_output.write("\nTime: "+str(self.model.model_time)+"\n")
         if(t == 0): #sell resources to node
             tmp = self.resource - (self.fuel_reserve * self.capacity)
             amount = min(node.max_amt(t), tmp)
-            print("Transaction: "+self.id+" selling to "+node.id)
+            self.model.main_output.write("Transaction: "+self.id+" selling to "+node.id+"\n")
         else: #buy resources from node
             amount = min(node.max_amt(t), self.capacity - self.resource)
             amount = amount * -1
-            print("Transaction: "+self.id+" buying from "+node.id)
+            self.model.main_output.write("Transaction: "+self.id+" buying from "+node.id+"\n")
             self.current_price = (self.current_price*self.resource + (-amount)*node.sell_price(self))/(self.resource - amount) #current price is weighted average of existing and new unit price
         self.resource = self.resource - amount #update my resource stockpile
         price = node.transact(self, amount)
-        print("Transaction Value: "+str(price))
-        print("Transaction Volume: "+str(abs(amount)))
-        print("\n")
+        self.model.main_output.write("Transaction Value: "+str(price)+"\n")
+        self.model.main_output.write("Transaction Volume: "+str(abs(amount))+"\n")
+        self.model.main_output.write("\n")
         return price #return net transaction value to transporter!
     
     def sellprice(self, node): #check sale price
@@ -273,7 +268,7 @@ class Transporter(mesa.Agent):
         self.resource = self.resource - tsfr['dV']/self.fuel_economy #use resources to transfer
         self.state = 3 #increment state appropriately
         self.unDock()
-        print(self.id+" found seller: "+self.dest.id)
+        self.model.main_output.write("Time: "+str(self.model.model_time)+"\n"+self.id+" found seller: "+self.dest.id+"\n")
     
     def step_output(self):
         return str(self.model.model_time)+","+str(self.state)+","+node2str(self.Current_Node)+","+node2str(self.dest)+","+str(self.TOF_remain)+","+str(self.resource)+","+str(self.capacity)+","+str(self.compPrems(0))+","+str(self.compPrems(1))+"\n"
@@ -310,7 +305,7 @@ class Transporter(mesa.Agent):
             self.unDock()
         elif(self.state == 0):
             if(len(self.dest_opts) < 1):
-                print(self.id+" failed to have any bids accepted")
+                self.model.main_output.write("Time: "+str(self.model.model_time)+"\n"+self.id+" failed to have any bids accepted\n")
                 return #no accepted bids
             else:
                 max_p = -1
@@ -324,7 +319,7 @@ class Transporter(mesa.Agent):
                     print("Error: Failed to Assign Dest Node")
                 else:
                     best.Reserve(self.capacity*(1-self.fuel_reserve)) #tell the node I accept and am on my way
-                    print(self.id+" accepted bid on "+best.id)
+                    self.model.main_output.write("Time: "+str(self.model.model_time)+"\n"+self.id+" accepted bid on "+best.id+"\n")
                     self.state = 1 #move to next state
                     self.dest = best
                     tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest) #get transfer details

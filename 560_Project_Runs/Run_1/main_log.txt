@@ -1,0 +1,19 @@
+T1 has docked at LeoDepot
+Time: 0
+T1 failed to have any bids accepted
+Transporter T1 bids on node ISS
+Time: 60
+T1 accepted bid on ISS
+
+Time: 120
+Transaction: T1 buying from LeoDepot
+Transaction Value: -2.4000000000000004
+Transaction Volume: 60.0
+
+T1 has docked at ISS
+
+Time: 2940
+Transaction: T1 selling to ISS
+Transaction Value: 97.63333333333408
+Transaction Volume: 61.0208333333338
+
