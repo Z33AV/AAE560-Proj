@@ -61,7 +61,9 @@ class Node(mesa.Agent):
     def sell_price(self, trans):
         prem = self.getPrem(1) #price premium (or discount) due to current inventory level
         price = self.baseprice * prem
-        if(trans.operator.lower() != self.operator.lower()):
+        if(not type(trans) is Transporter): #check for type issue
+            pass
+        elif(trans.operator.lower() != self.operator.lower()):
             price = price * self.margin #account for margin when selling "out of network"
         return price
     
@@ -70,7 +72,7 @@ class Node(mesa.Agent):
         if(t == 1):
             return self.resource #can't sell more than I have
         else:
-            return self.capacity-(self.resource) #can't buy more than I have space for (including contracted purchases)
+            return self.capacity-(self.resource+self.incoming) #can't buy more than I have space for (including contracted purchases)
     
     def transact(self, trans, quantity): #returns the money exchange associated with the transaction
         led_str = str(self.model.model_time)+","+trans.id+","+self.id+"," #string for the ledger entry
@@ -141,7 +143,7 @@ class Node(mesa.Agent):
         return
     
     def step_output(self):
-        return str(self.model.model_time)+","+str(self.loc[0])+","+str(self.loc[1])+","+str(self.resource)+","+str(self.capacity)+","+str(len(self.ports))+","+str(self.getPrem(0))+","+str(self.getPrem(1))+"\n"
+        return str(self.model.model_time)+","+str(self.loc[0])+","+str(self.loc[1])+","+str(self.resource)+","+str(self.incoming)+","+str(self.capacity)+","+str(len(self.ports))+","+str(self.buy_price())+","+str(self.sell_price(-1))+"\n"
 
     #Define step and/or advance functions
     def step(self):
@@ -171,6 +173,7 @@ class Transporter(mesa.Agent):
         self.fuel_reserve = 0.2
         self.fuel_economy = 0.1 #dV/resource achievable by transporters
         self.idle = 0 #current idle time is 0
+        self.tsfr = None #empty init method
         
         #state definition
         #0 -> available
@@ -212,7 +215,9 @@ class Transporter(mesa.Agent):
     def sellprice(self, node): #check sale price
         prem = self.compPrems(1) #price premium (or discount) due to current inventory level
         price = self.current_price * prem
-        if(node.operator != self.operator):
+        if(not type(node) is Node):
+            pass
+        elif(node.operator != self.operator):
             price = price * self.margin #account for margin when selling "out of network"
         return price
     
@@ -241,7 +246,7 @@ class Transporter(mesa.Agent):
         self.Current_Node = None
 
     def profit(self, node):
-        profit = (1 - self.fuel_reserve) * node.buy_price() * self.capacity #how much the delivery nets me
+        profit = min(node.max_amt(0), (1 - self.fuel_reserve) * self.capacity) * node.buy_price() #how much the delivery nets me
         profit = profit - self.current_price*self.resource #value of current inventory
         profit = profit - self.Current_Node.sell_price(self) * (self.capacity - self.resource) #cost to fill inventory
         res_val = ((self.resource*self.current_price) + (self.capacity-self.resource)*self.Current_Node.sell_price(self))/self.capacity #current resource value of hypothetical full inventory
@@ -263,15 +268,18 @@ class Transporter(mesa.Agent):
             return
         ind = opt_vs.index(max(opt_vs))
         self.dest = opts[ind]
-        tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest)
-        self.TOF_remain = tsfr['TOF'] #compute and store time of flight
-        self.resource = self.resource - tsfr['dV']/self.fuel_economy #use resources to transfer
+        self.tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest)
+        self.TOF_remain = self.tsfr['TOF'] #compute and store time of flight
+        self.resource = self.resource - self.tsfr['dV']/self.fuel_economy #use resources to transfer
         self.state = 3 #increment state appropriately
         self.unDock()
-        self.model.main_output.write("Time: "+str(self.model.model_time)+"\n"+self.id+" found seller: "+self.dest.id+"\n")
+        self.model.main_output.write("\nTime: "+str(self.model.model_time)+"\n")
+        self.model.main_output.write("Transporter "+self.id+" transferring to seller: "+self.dest.id+"\n")
+        self.model.main_output.write("Flight Time: "+str(self.tsfr['TOF'])+"\n")
+        self.model.main_output.write("dV: "+str(self.tsfr['dV'])+"\n")
     
     def step_output(self):
-        return str(self.model.model_time)+","+str(self.state)+","+node2str(self.Current_Node)+","+node2str(self.dest)+","+str(self.TOF_remain)+","+str(self.resource)+","+str(self.capacity)+","+str(self.compPrems(0))+","+str(self.compPrems(1))+"\n"
+        return str(self.model.model_time)+","+str(self.state)+","+node2str(self.Current_Node)+","+node2str(self.dest)+","+str(self.TOF_remain)+","+str(self.resource)+","+str(self.capacity)+","+str(self.buyprice())+","+str(self.sellprice(-1))+"\n"
 
     def step(self):
         if(self.idle > 0): #allow idling
@@ -299,8 +307,11 @@ class Transporter(mesa.Agent):
             self.find_seller() #look for a seller I can move to
         elif(self.state == 1):
             self.transact(self.Current_Node, 1)
-            tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest) #get transfer details
-            self.resource = self.resource - tsfr['dV']/self.fuel_economy
+            self.resource = self.resource - self.tsfr['dV']/self.fuel_economy
+            self.model.main_output.write("\nTime: "+str(self.model.model_time)+"\n")
+            self.model.main_output.write("Transporter "+self.id+" transferring to buyer: "+self.dest.id+"\n")
+            self.model.main_output.write("Flight Time: "+str(self.tsfr['TOF'])+"\n")
+            self.model.main_output.write("dV: "+str(self.tsfr['dV'])+"\n")
             self.state = 2
             self.unDock()
         elif(self.state == 0):
@@ -322,8 +333,9 @@ class Transporter(mesa.Agent):
                     self.model.main_output.write("Time: "+str(self.model.model_time)+"\n"+self.id+" accepted bid on "+best.id+"\n")
                     self.state = 1 #move to next state
                     self.dest = best
-                    tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest) #get transfer details
-                    self.TOF_remain = tsfr['TOF']
+                    self.tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest) #get transfer details
+                    self.TOF_remain = self.tsfr['TOF']
+                    self.dest_opts = []
         else:
             print("STATE ERROR")
         return

@@ -49,7 +49,6 @@ class OverallModel(mesa.Model):
         for i in self.FnList:
             a = Agents.Node((float(i[1]), float(i[2])), {"a": None, "ex": None, "ey": None, "i": None, "RAAN": None, "f": None,}, float(i[3]), float(i[4]), str(i[0]), str(i[5]), self, float(i[6]), float(i[7]), int(i[8]), True)
             a.OrbitPars = Phys.PlaceNode(a) #- will generate the base orbital params
-            print(a.OrbitPars)
             self.schedule.add(a)
             self.NodeAglist.append(a)
             print("Agent " + a.id + " added to schedule")
@@ -84,7 +83,9 @@ class OverallModel(mesa.Model):
                         tempTransferParams = Phys.ComputeTransfer(i.Current_Node,j)
                         if (tempTransferParams['isPossible'] ==1) and (i.profit(j) > 0): #bid if possible and profitable
                             i.makeBids(j,tempTransferParams['TOF'])
-                            self.main_output.write("Transporter " + i.id + " bids on node " +j.id+"\n")
+                            self.main_output.write("\nTransporter " + i.id + " bids on node " +j.id+"\n")
+                            self.main_output.write("Profit: "+str(i.profit(j))+"\n")
+                            self.main_output.write("TOF: "+str(tempTransferParams['TOF'])+"\n\n")
             else:
                 pass
                 #print("Transport " + i.id + " is unavailable and not bidding")
@@ -94,8 +95,11 @@ class OverallModel(mesa.Model):
             minTOF = min(i.bidList, default=-1)
             if minTOF < 0: #no bids made on this node
                 continue
-            ind = i.bidList.index(minTOF)
-            i.transbidlist[ind].acceptedBid(i)
+            else:
+                ind = i.bidList.index(minTOF)
+                i.transbidlist[ind].acceptedBid(i)
+            i.transbidlist = []
+            i.bidList = []
         return
 
     def start_collection(self): #start data collection
@@ -122,7 +126,7 @@ class OverallModel(mesa.Model):
             fname = t.id+".csv"
             make_my_dir(fname)
             f = open(self.root_path+self.run_name+t_fold+fname, 'w')
-            f.write("Time,state,curr_node,dest_node,remaining_TOF,resources,capacity,buy_prem,sell_prem\n")
+            f.write("Time,state,curr_node,dest_node,remaining_TOF,resources,capacity,Buy_price,Sell_price\n")
             self.trans_files.append(f)
         
         #open node files for writing
@@ -135,7 +139,7 @@ class OverallModel(mesa.Model):
             tmp = self.root_path+self.run_name+fold+fname
             make_my_dir(tmp)
             f = open(tmp, 'w')
-            f.write("Time,x,y,resources,capacity,ports_filled,buy_prem,sell_prem\n")
+            f.write("Time,x,y,resources,incoming,capacity,ports_filled,Buy_price,Sell_price\n")
             self.node_files.append(f)
     
     def start_main_out(self):

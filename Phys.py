@@ -64,7 +64,7 @@ def ComputeTransfer(origin,dest):
         phi = math.pi - n_f * tof               # rad, required phase angle
     
         # 5 deg tolerance for transfer geometry 
-        if abs(phi - ang)*180/math.pi <= 5: 
+        if abs(phi - ang)*180/math.pi <= 15: 
             calcTransfer = 1
         else:
             calcTransfer = 0
@@ -75,7 +75,7 @@ def ComputeTransfer(origin,dest):
         tof = -1
         dv_tot = -1
 
-    if calcTransfer:        
+    if calcTransfer:
         v_i = numpy.sqrt(mu/r_i)            # km/s, velocity before initial maneuver 
         v_p = numpy.sqrt(2*mu/r_i - mu/a_t) # km/s, velocity after initial maneuver
         dv_1 = v_p - v_i                    # km/s, first dV 
@@ -84,7 +84,7 @@ def ComputeTransfer(origin,dest):
         v_f = numpy.sqrt(mu/r_f)            # km/s, velocity after final maneuver
         dv_2 = v_f - v_a                    # km/s, last dV
 
-        dv_tot = dv_1 + dv_2                # km/s, total dV
+        dv_tot = abs(dv_1 + dv_2)           # km/s, total dV
 
     TransferParams = {"isPossible": calcTransfer,"dV": dv_tot,"TOF":tof}
     
