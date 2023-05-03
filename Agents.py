@@ -20,6 +20,14 @@ def node2str(node):
 #print("This is the agents file")
 # CONSTANT
 
+def d_curve(x): #demand curve (0<= x <= 1)
+    a = 0.5
+    return (1 + a) * (0.6*(x**0.5))/(2*a)
+
+def s_curve(x): #supply curve (0<= x <= 1)
+    b = 0.25
+    return (1 + b) * (x**2)/(10*b)
+
 class Node(mesa.Agent):
     def __init__(self,Location,OrbitPars,capacity,resource_lvl,iid,operator,model,price,c_rate,econ_type,fixed):
         super().__init__(iid, model)
@@ -92,15 +100,9 @@ class Node(mesa.Agent):
         prem = 1
         inv = (self.resource+self.incoming)/self.capacity #normalized inventory level (including incoming)
         if(t == 0): #indicates a buy price check
-            if(inv > 0.75):
-                prem = 0.8
-            elif(inv < 0.25):
-                prem = 1.20 #20% increase if inventory is low
+            prem = d_curve(inv)
         else:
-            if(inv < 0.25):
-                prem = 1.20
-            elif(inv > 0.75):
-                prem = 0.8 #indicates 20% discount
+            prem = s_curve(inv)
         return prem
 
     def Dock(self, trans): #adds transporter to the ports array, corresponds to Dock method in transporter class
@@ -243,6 +245,8 @@ class Transporter(mesa.Agent):
         self.dest.Reserve(self) #broken because self.dest is a stringof the destination id, not the actual object
     
     def unDock(self):
+        jstr = str(self.model.model_time)+","+self.id+","+self.Current_Node.id+","+self.dest.id+","+str(self.TOF_remain)
+        self.model.jlog.write(jstr)
         self.Current_Node.unDock(self)
         self.Current_Node = None
 

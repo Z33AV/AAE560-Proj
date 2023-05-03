@@ -41,6 +41,7 @@ class OverallModel(mesa.Model):
         self.main_output = None
         self.main_data = None
         self.ledger = None
+        self.jlog = None
         self.trans_files = []
         self.node_files = []
 
@@ -108,6 +109,7 @@ class OverallModel(mesa.Model):
         print("Starting Data Collection")
         #define file paths
         ledger_name = "ledger.csv"
+        journey_log = "jlog.csv"
 
         t_fold = "Transporters/"
         fn_fold = "Fixed_Nodes/"
@@ -115,6 +117,7 @@ class OverallModel(mesa.Model):
 
         #make directories
         make_my_dir(self.root_path+self.run_name+ledger_name)
+        make_my_dir(self.root_path+self.run_name+journey_log)
         make_my_dir(self.root_path+self.run_name+t_fold)
         make_my_dir(self.root_path+self.run_name+fn_fold)
         make_my_dir(self.root_path+self.run_name+vn_fold)
@@ -122,6 +125,9 @@ class OverallModel(mesa.Model):
         #open main files for writing
         self.ledger = open(self.root_path+self.run_name+ledger_name, 'w')
         self.ledger.write("Time,Transporter,Node,TT,Quantity,Price,Value\n")
+
+        self.jlog = open(self.root_path+self.run_name+journey_log, 'w')
+        self.jlog.write("Time,Transporter,Origin,Destination,TOF\n")
 
         #open transporter files for writing
         for t in self.TransAglist:
