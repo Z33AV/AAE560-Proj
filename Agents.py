@@ -91,6 +91,10 @@ class Node(mesa.Agent):
         else: #indicates a sale
             led_str = led_str+"s,"
             price = self.sell_price(trans)
+        if(self.operator.lower() == trans.operator.lower()):
+            led_str = led_str + "1,"
+        else:
+            led_str = led_str + "0,"
         self.resource = self.resource + quantity
         led_str = led_str+str(quantity)+","+str(price)+","+str(price * abs(quantity))+"\n"
         self.model.ledger.write(led_str)

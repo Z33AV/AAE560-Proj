@@ -124,7 +124,7 @@ class OverallModel(mesa.Model):
 
         #open main files for writing
         self.ledger = open(self.root_path+self.run_name+ledger_name, 'w')
-        self.ledger.write("Time,Transporter,Node,TT,Quantity,Price,Value\n")
+        self.ledger.write("Time,Transporter,Node,TT,In_Network,Quantity,Price,Value\n")
 
         self.jlog = open(self.root_path+self.run_name+journey_log, 'w')
         self.jlog.write("Time,Transporter,Origin,Destination,TOF\n")

@@ -1,222 +1,329 @@
 T1 has docked at LeoDepot
 
  Time: 0 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 183.149056
-Node: ISS || Possible: 0 || Profit: 11.149056000000002
-Node: GeoSSP || Possible: 0 || Profit: 143.149056
+Node: DSG || Possible: 0 || Profit: 49.39775999999998
+Node: ISS || Possible: 0 || Profit: 4.721114579112136
+Node: GeoSSP || Possible: 0 || Profit: 76.13282473629425
+Node: LEO1 || Possible: 0 || Profit: -76.60224
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
 Time: 0 || T1 failed to have any bids accepted
 
  Time: 60 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 239.149056
-Node: ISS || Possible: 1 || Profit: -0.17472689192928403
-Node: GeoSSP || Possible: 0 || Profit: 143.149056
+Node: DSG || Possible: 0 || Profit: 49.371507265055186
+Node: ISS || Possible: 1 || Profit: -4.245164692257881
+Node: GeoSSP || Possible: 0 || Profit: 76.12221776626612
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
 Time: 60 || T1 failed to have any bids accepted
 
  Time: 120 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 239.149056
-Node: ISS || Possible: 1 || Profit: -0.12472689192931063
-Node: GeoSSP || Possible: 0 || Profit: 143.149056
+Node: DSG || Possible: 0 || Profit: 49.345249057940336
+Node: ISS || Possible: 1 || Profit: -4.215595191584698
+Node: GeoSSP || Possible: 0 || Profit: 76.1116100595149
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
 Time: 120 || T1 failed to have any bids accepted
 
  Time: 180 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 239.149056
-Node: ISS || Possible: 1 || Profit: -0.07472689192932769
-Node: GeoSSP || Possible: 0 || Profit: 143.149056
+Node: DSG || Possible: 0 || Profit: 49.31898537523212
+Node: ISS || Possible: 1 || Profit: -4.186033964167451
+Node: GeoSSP || Possible: 0 || Profit: 76.10100161588713
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
 Time: 180 || T1 failed to have any bids accepted
 
  Time: 240 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 239.149056
-Node: ISS || Possible: 1 || Profit: -0.024726891929320982
-Node: GeoSSP || Possible: 0 || Profit: 143.149056
+Node: DSG || Possible: 0 || Profit: 49.29271621350367
+Node: ISS || Possible: 1 || Profit: -4.156481011357408
+Node: GeoSSP || Possible: 0 || Profit: 76.09039243522918
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
 Time: 240 || T1 failed to have any bids accepted
 
  Time: 300 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 239.149056
-Node: ISS || Possible: 1 || Profit: 0.025273108070661965
+Node: DSG || Possible: 0 || Profit: 49.266441569324485
+Node: ISS || Possible: 1 || Profit: -4.126936334506376
+Node: GeoSSP || Possible: 0 || Profit: 76.0797825173874
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Transporter T1 bids on node ISS
-Profit: 0.025273108070661965
-TOF: 2759.5396851827036
+Time: 300 || T1 failed to have any bids accepted
 
-Node: GeoSSP || Possible: 0 || Profit: 143.149056
+ Time: 360 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 49.24016143926056
+Node: ISS || Possible: 1 || Profit: -4.097399934966696
+Node: GeoSSP || Possible: 0 || Profit: 76.06917186220815
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 300
-T1 accepted bid on ISS
-To deliver 60.13888888888886 resources
+Time: 360 || T1 failed to have any bids accepted
 
+ Time: 420 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 49.213875819874204
+Node: ISS || Possible: 1 || Profit: -4.067871814091291
+Node: GeoSSP || Possible: 0 || Profit: 76.05856046953767
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687408
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 360
-Transaction: T1 buying from LeoDepot
-Transaction Value: -59.996159999999996
-Transaction Volume: 60.0
+Time: 420 || T1 failed to have any bids accepted
 
+ Time: 480 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 49.1875847077243
+Node: ISS || Possible: 1 || Profit: -4.038351973233682
+Node: GeoSSP || Possible: 0 || Profit: 76.04794833922213
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 360
-Transporter T1 transferring to buyer: ISS
-Flight Time: 2759.5396851827036
-dV: 0.05692357554474192
-T1 has docked at ISS
+Time: 480 || T1 failed to have any bids accepted
 
-Time: 3180
-Transaction: T1 selling to ISS
-Transaction Value: 108.24999999999994
-Transaction Volume: 60.13888888888886
+ Time: 540 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 49.16128809936593
+Node: ISS || Possible: 1 || Profit: -4.008840413747863
+Node: GeoSSP || Possible: 0 || Profit: 76.03733547110772
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687408
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
+Time: 540 || T1 failed to have any bids accepted
 
-Time: 3240
-Transporter T1 transferring to seller: LeoDepot
-Flight Time: 2759.5396851827036
-dV: 0.05692357554474281
-Transfer Cost [resources]: 0.5692357554474281
+ Time: 600 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 49.134985991350746
+Node: ISS || Possible: 1 || Profit: -3.9793371369884483
+Node: GeoSSP || Possible: 0 || Profit: 76.02672186504051
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-T1 has docked at LeoDepot
+Time: 600 || T1 failed to have any bids accepted
 
- Time: 6120 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.64969992277979
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 660 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 49.10867838022665
+Node: ISS || Possible: 1 || Profit: -3.9498421443106366
+Node: GeoSSP || Possible: 0 || Profit: 76.01610752086654
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6120 || T1 failed to have any bids accepted
+Time: 660 || T1 failed to have any bids accepted
 
- Time: 6180 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.6096999227798
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 720 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 49.08236526253803
+Node: ISS || Possible: 1 || Profit: -3.920355437070136
+Node: GeoSSP || Possible: 0 || Profit: 76.00549243843179
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687408
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6180 || T1 failed to have any bids accepted
+Time: 720 || T1 failed to have any bids accepted
 
- Time: 6240 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.56969992277979
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 780 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 49.05604663482566
+Node: ISS || Possible: 1 || Profit: -3.8908770166232935
+Node: GeoSSP || Possible: 0 || Profit: 75.99487661758221
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 0 || Profit: -76.60224
+Node: LEO2b || Possible: 0 || Profit: -76.60224
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6240 || T1 failed to have any bids accepted
+Time: 780 || T1 failed to have any bids accepted
 
- Time: 6300 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.52969992277981
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 840 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 49.029722493626636
+Node: ISS || Possible: 1 || Profit: -3.8614068843268976
+Node: GeoSSP || Possible: 0 || Profit: 75.98426005816367
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 1 || Profit: -94.07125769279482
+Node: LEO2b || Possible: 1 || Profit: -94.07125769279479
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6300 || T1 failed to have any bids accepted
+Time: 840 || T1 failed to have any bids accepted
 
- Time: 6360 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.4896999227798
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 900 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 49.003392835474415
+Node: ISS || Possible: 1 || Profit: -3.8319450415383907
+Node: GeoSSP || Possible: 0 || Profit: 75.97364276002199
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687408
+Node: LEO2a || Possible: 1 || Profit: -94.07125769279482
+Node: LEO2b || Possible: 1 || Profit: -94.0712576927948
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6360 || T1 failed to have any bids accepted
+Time: 900 || T1 failed to have any bids accepted
 
- Time: 6420 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.44969992277983
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 960 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 48.977057656898864
+Node: ISS || Possible: 1 || Profit: -3.802491489615819
+Node: GeoSSP || Possible: 0 || Profit: 75.96302472300297
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687408
+Node: LEO2a || Possible: 1 || Profit: -94.0712576927948
+Node: LEO2b || Possible: 1 || Profit: -94.0712576927948
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6420 || T1 failed to have any bids accepted
+Time: 960 || T1 failed to have any bids accepted
 
- Time: 6480 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.40969992277984
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 1020 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 48.95071695442624
+Node: ISS || Possible: 1 || Profit: -3.7730462299176546
+Node: GeoSSP || Possible: 0 || Profit: 75.95240594695235
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687408
+Node: LEO2a || Possible: 1 || Profit: -94.07125769279482
+Node: LEO2b || Possible: 1 || Profit: -94.0712576927948
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6480 || T1 failed to have any bids accepted
+Time: 1020 || T1 failed to have any bids accepted
 
- Time: 6540 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.36969992277983
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 1080 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 48.92437072457908
+Node: ISS || Possible: 1 || Profit: -3.743609263803045
+Node: GeoSSP || Possible: 0 || Profit: 75.94178643171568
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 1 || Profit: -94.07125769279482
+Node: LEO2b || Possible: 1 || Profit: -94.0712576927948
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6540 || T1 failed to have any bids accepted
+Time: 1080 || T1 failed to have any bids accepted
 
- Time: 6600 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.32969992277984
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 1140 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 48.89801896387627
+Node: ISS || Possible: 1 || Profit: -3.714180592631707
+Node: GeoSSP || Possible: 0 || Profit: 75.93116617713869
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687408
+Node: LEO2a || Possible: 1 || Profit: -94.07125769279482
+Node: LEO2b || Possible: 1 || Profit: -94.07125769279482
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6600 || T1 failed to have any bids accepted
+Time: 1140 || T1 failed to have any bids accepted
 
- Time: 6660 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.28969992277985
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 1200 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 48.87166166883317
+Node: ISS || Possible: 1 || Profit: -3.684760217763867
+Node: GeoSSP || Possible: 0 || Profit: 75.92054518306693
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687408
+Node: LEO2a || Possible: 1 || Profit: -94.07125769279482
+Node: LEO2b || Possible: 1 || Profit: -94.07125769279482
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6660 || T1 failed to have any bids accepted
+Time: 1200 || T1 failed to have any bids accepted
 
- Time: 6720 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.24969992277985
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 1260 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 48.84529883596127
+Node: ISS || Possible: 1 || Profit: -3.6553481405602932
+Node: GeoSSP || Possible: 0 || Profit: 75.9099234493458
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687408
+Node: LEO2a || Possible: 1 || Profit: -94.07125769279483
+Node: LEO2b || Possible: 1 || Profit: -94.0712576927948
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6720 || T1 failed to have any bids accepted
+Time: 1260 || T1 failed to have any bids accepted
 
- Time: 6780 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.20969992277988
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 1320 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 48.81893046176859
+Node: ISS || Possible: 1 || Profit: -3.6259443623824485
+Node: GeoSSP || Possible: 0 || Profit: 75.89930097582084
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687407
+Node: LEO2a || Possible: 1 || Profit: -94.07125769279482
+Node: LEO2b || Possible: 1 || Profit: -94.0712576927948
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6780 || T1 failed to have any bids accepted
+Time: 1320 || T1 failed to have any bids accepted
 
- Time: 6840 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.16969992277987
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 1380 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 48.79255654275936
+Node: ISS || Possible: 1 || Profit: -3.596548884592239
+Node: GeoSSP || Possible: 0 || Profit: 75.88867776233744
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687408
+Node: LEO2a || Possible: 1 || Profit: -94.07125769279482
+Node: LEO2b || Possible: 1 || Profit: -94.07125769279482
+Node: MEO1a || Possible: 0 || Profit: -76.60224
+Node: MEO1b || Possible: 0 || Profit: -76.60224
 
-Time: 6840 || T1 failed to have any bids accepted
+Time: 1380 || T1 failed to have any bids accepted
 
- Time: 6900 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.12969992277989
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+ Time: 1440 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 48.76617707543417
+Node: ISS || Possible: 1 || Profit: -3.5671617085521707
+Node: GeoSSP || Possible: 1 || Profit: 35.517901622920064
 
-Time: 6900 || T1 failed to have any bids accepted
+Transporter T1 bids on node GeoSSP
+Profit: 35.517901622920064
+TOF: 14980.974813236378
 
- Time: 6960 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.08969992277991
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+Node: LEO1 || Possible: 1 || Profit: -85.35719685687408
+Node: LEO2a || Possible: 1 || Profit: -94.07125769279482
+Node: LEO2b || Possible: 1 || Profit: -94.0712576927948
+Node: MEO1a || Possible: 1 || Profit: -115.6829327999742
+Node: MEO1b || Possible: 1 || Profit: -115.6829327999742
 
-Time: 6960 || T1 failed to have any bids accepted
-
- Time: 7020 || T1 available to bid. Options:
-Node: DSG || Possible: 0 || Profit: 243.3506632216264
-Node: ISS || Possible: 1 || Profit: -99.04969992277992
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
-
-Time: 7020 || T1 failed to have any bids accepted
-
- Time: 7080 || T1 available to bid. Options:
-Node: DSG || Possible: 1 || Profit: 192.59049592236684
-
-Transporter T1 bids on node DSG
-Profit: 192.59049592236684
-TOF: 430296.40256860683
-
-Node: ISS || Possible: 1 || Profit: -99.00969992277992
-Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
-
-Time: 7080
-T1 accepted bid on DSG
+Time: 1440
+T1 accepted bid on GeoSSP
 To deliver 80.0 resources
 
 
-Time: 7140
+Time: 1500
 Transaction: T1 buying from LeoDepot
-Transaction Value: -61.27343864871812
-Transaction Volume: 61.27736039978371
+Transaction Value: -37.4976
+Transaction Volume: 60.0
 
 
-Time: 7140
-Transporter T1 transferring to buyer: DSG
-Flight Time: 430296.40256860683
-dV: 3.930866443071752
-T1 has docked at DSG
+Time: 1500
+Transporter T1 transferring to buyer: GeoSSP
+Flight Time: 14980.974813236378
+dV: 3.741915767376882
+Transfer Cost [resources]: 37.41915767376882
 
-Time: 437520
-Transaction: T1 selling to DSG
-Transaction Value: 336.0
+T1 has docked at GeoSSP
+
+Time: 16560
+Transaction: T1 selling to GeoSSP
+Transaction Value: 149.77903725154465
 Transaction Volume: 80.0
 
