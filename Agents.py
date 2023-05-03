@@ -64,7 +64,7 @@ class Node(mesa.Agent):
         if(not type(trans) is Transporter): #check for type issue
             pass
         elif(trans.operator.lower() != self.operator.lower()):
-            price = price * self.margin #account for margin when selling "out of network"
+            price = price * (1 + self.margin) #account for margin when selling "out of network"
         return price
     
     def max_amt(self, t): #returns the maximum allowable resource transfer based on inventory constraints
@@ -78,8 +78,8 @@ class Node(mesa.Agent):
         led_str = str(self.model.model_time)+","+trans.id+","+self.id+"," #string for the ledger entry
         if(quantity > 0): #indicates a purchase
             led_str = led_str+"b,"
-            price = self.buy_price()
             self.incoming = self.incoming - quantity #adjust incoming quantity when it is received
+            price = self.buy_price()
         else: #indicates a sale
             led_str = led_str+"s,"
             price = self.sell_price(trans)
@@ -174,6 +174,7 @@ class Transporter(mesa.Agent):
         self.fuel_economy = 0.1 #dV/resource achievable by transporters
         self.idle = 0 #current idle time is 0
         self.tsfr = None #empty init method
+        self.deliver_amt = 0
         
         #state definition
         #0 -> available
@@ -197,8 +198,8 @@ class Transporter(mesa.Agent):
         #t = 0 -> buy, t = 1 -> sell (Node POV!!)
         self.model.main_output.write("\nTime: "+str(self.model.model_time)+"\n")
         if(t == 0): #sell resources to node
-            tmp = self.resource - (self.fuel_reserve * self.capacity)
-            amount = min(node.max_amt(t), tmp)
+            amount = self.deliver_amt
+            self.deliver_amt = 0
             self.model.main_output.write("Transaction: "+self.id+" selling to "+node.id+"\n")
         else: #buy resources from node
             amount = min(node.max_amt(t), self.capacity - self.resource)
@@ -245,13 +246,17 @@ class Transporter(mesa.Agent):
         self.Current_Node.unDock(self)
         self.Current_Node = None
 
-    def profit(self, node):
-        profit = min(node.max_amt(0), (1 - self.fuel_reserve) * self.capacity) * node.buy_price() #how much the delivery nets me
+    def profit(self, node): #KNOWN LIMITATION: Profit inflated for impossible transfers, not actually an issue but gives misleading results (stems from method of marking tsfr impossible)
+        tsfr = Phys.ComputeTransfer(self.Current_Node, node)
+        dv_cost = tsfr['dV']/self.fuel_economy
+        if(tsfr['isPossible']): #for possible transfers I can consider keeping half my transfer cost in reserve instead of the default fuel reserve
+            profit = min(node.max_amt(0), max(self.capacity - dv_cost, (1 - self.fuel_reserve) * self.capacity)) * node.buy_price() #how much the delivery nets me
+        else:
+            profit = min(node.max_amt(0), (1 - self.fuel_reserve) * self.capacity) * node.buy_price() #how much the delivery nets me
         profit = profit - self.current_price*self.resource #value of current inventory
         profit = profit - self.Current_Node.sell_price(self) * (self.capacity - self.resource) #cost to fill inventory
         res_val = ((self.resource*self.current_price) + (self.capacity-self.resource)*self.Current_Node.sell_price(self))/self.capacity #current resource value of hypothetical full inventory
-        dv = Phys.ComputeTransfer(self.Current_Node, node)['dV']
-        profit = profit - res_val*(dv/self.fuel_economy)
+        profit = profit - res_val*dv_cost
         return profit #return numerical profit to be made by completing transaction from current node
     
     def find_seller(self):
@@ -277,6 +282,7 @@ class Transporter(mesa.Agent):
         self.model.main_output.write("Transporter "+self.id+" transferring to seller: "+self.dest.id+"\n")
         self.model.main_output.write("Flight Time: "+str(self.tsfr['TOF'])+"\n")
         self.model.main_output.write("dV: "+str(self.tsfr['dV'])+"\n")
+        self.model.main_output.write("Transfer Cost [resources]: "+str(self.tsfr['dV']/self.fuel_economy)+"\n\n")
     
     def step_output(self):
         return str(self.model.model_time)+","+str(self.state)+","+node2str(self.Current_Node)+","+node2str(self.dest)+","+str(self.TOF_remain)+","+str(self.resource)+","+str(self.capacity)+","+str(self.buyprice())+","+str(self.sellprice(-1))+"\n"
@@ -312,11 +318,12 @@ class Transporter(mesa.Agent):
             self.model.main_output.write("Transporter "+self.id+" transferring to buyer: "+self.dest.id+"\n")
             self.model.main_output.write("Flight Time: "+str(self.tsfr['TOF'])+"\n")
             self.model.main_output.write("dV: "+str(self.tsfr['dV'])+"\n")
+            self.model.main_output.write("Transfer Cost [resources]: "+str(self.tsfr['dV']/self.fuel_economy)+"\n\n")
             self.state = 2
             self.unDock()
         elif(self.state == 0):
             if(len(self.dest_opts) < 1):
-                self.model.main_output.write("Time: "+str(self.model.model_time)+"\n"+self.id+" failed to have any bids accepted\n")
+                self.model.main_output.write("\nTime: "+str(self.model.model_time)+" || "+self.id+" failed to have any bids accepted\n")
                 return #no accepted bids
             else:
                 max_p = -1
@@ -329,8 +336,10 @@ class Transporter(mesa.Agent):
                 if(best is None):
                     print("Error: Failed to Assign Dest Node")
                 else:
-                    best.Reserve(self.capacity*(1-self.fuel_reserve)) #tell the node I accept and am on my way
-                    self.model.main_output.write("Time: "+str(self.model.model_time)+"\n"+self.id+" accepted bid on "+best.id+"\n")
+                    self.deliver_amt = min(best.max_amt(0), self.capacity*(1-self.fuel_reserve))
+                    best.Reserve(self.deliver_amt) #tell the node I accept and am on my way
+                    self.model.main_output.write("\nTime: "+str(self.model.model_time)+"\n"+self.id+" accepted bid on "+best.id+"\n")
+                    self.model.main_output.write("To deliver "+str(self.deliver_amt)+" resources\n\n")
                     self.state = 1 #move to next state
                     self.dest = best
                     self.tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest) #get transfer details

@@ -78,9 +78,11 @@ class OverallModel(mesa.Model):
         #ALL Agents make initial bids
         for i in self.TransAglist:
             if i.state == 0: #only available transporters make bids
+                self.main_output.write("\n Time: "+str(self.model_time)+" || "+i.id+" available to bid. Options:\n")
                 for j in self.NodeAglist:
                     if (j.buyer and (j.id.lower() != i.Current_Node.id.lower())): #don't bid on my current node or nodes that do not buy
                         tempTransferParams = Phys.ComputeTransfer(i.Current_Node,j)
+                        self.main_output.write("Node: "+j.id+" || Possible: "+str(tempTransferParams['isPossible'])+" || Profit: "+str(i.profit(j))+"\n")
                         if (tempTransferParams['isPossible'] ==1) and (i.profit(j) > 0): #bid if possible and profitable
                             i.makeBids(j,tempTransferParams['TOF'])
                             self.main_output.write("\nTransporter " + i.id + " bids on node " +j.id+"\n")

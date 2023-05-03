@@ -1,89 +1,212 @@
 T1 has docked at LeoDepot
-Time: 0
-T1 failed to have any bids accepted
+
+ Time: 0 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 183.149056
+Node: ISS || Possible: 0 || Profit: 11.149056000000002
+Node: GeoSSP || Possible: 0 || Profit: 143.149056
+
+Time: 0 || T1 failed to have any bids accepted
+
+ Time: 60 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 239.149056
+Node: ISS || Possible: 1 || Profit: -0.17472689192928403
+Node: GeoSSP || Possible: 0 || Profit: 143.149056
+
+Time: 60 || T1 failed to have any bids accepted
+
+ Time: 120 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 239.149056
+Node: ISS || Possible: 1 || Profit: -0.12472689192931063
+Node: GeoSSP || Possible: 0 || Profit: 143.149056
+
+Time: 120 || T1 failed to have any bids accepted
+
+ Time: 180 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 239.149056
+Node: ISS || Possible: 1 || Profit: -0.07472689192932769
+Node: GeoSSP || Possible: 0 || Profit: 143.149056
+
+Time: 180 || T1 failed to have any bids accepted
+
+ Time: 240 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 239.149056
+Node: ISS || Possible: 1 || Profit: -0.024726891929320982
+Node: GeoSSP || Possible: 0 || Profit: 143.149056
+
+Time: 240 || T1 failed to have any bids accepted
+
+ Time: 300 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 239.149056
+Node: ISS || Possible: 1 || Profit: 0.025273108070661965
 
 Transporter T1 bids on node ISS
-Profit: 29.391977373023614
-TOF: 2759.539685182703
+Profit: 0.025273108070661965
+TOF: 2759.5396851827036
 
-Time: 60
+Node: GeoSSP || Possible: 0 || Profit: 143.149056
+
+Time: 300
 T1 accepted bid on ISS
+To deliver 60.13888888888886 resources
 
-Time: 120
+
+Time: 360
 Transaction: T1 buying from LeoDepot
-Transaction Value: -2.4000000000000004
+Transaction Value: -59.996159999999996
 Transaction Volume: 60.0
 
 
-Time: 120
+Time: 360
 Transporter T1 transferring to buyer: ISS
-Flight Time: 2759.539685182703
+Flight Time: 2759.5396851827036
 dV: 0.05692357554474192
 T1 has docked at ISS
 
-Time: 2940
+Time: 3180
 Transaction: T1 selling to ISS
-Transaction Value: -0.8946666666666815
-Transaction Volume: 18.6388888888892
+Transaction Value: 108.24999999999994
+Transaction Volume: 60.13888888888886
 
 
-Time: 3000
+Time: 3240
 Transporter T1 transferring to seller: LeoDepot
 Flight Time: 2759.5396851827036
 dV: 0.05692357554474281
+Transfer Cost [resources]: 0.5692357554474281
+
 T1 has docked at LeoDepot
-Time: 5880
-T1 failed to have any bids accepted
-Time: 5940
-T1 failed to have any bids accepted
-Time: 6000
-T1 failed to have any bids accepted
-Time: 6060
-T1 failed to have any bids accepted
-Time: 6120
-T1 failed to have any bids accepted
-Time: 6180
-T1 failed to have any bids accepted
-Time: 6240
-T1 failed to have any bids accepted
-Time: 6300
-T1 failed to have any bids accepted
-Time: 6360
-T1 failed to have any bids accepted
-Time: 6420
-T1 failed to have any bids accepted
-Time: 6480
-T1 failed to have any bids accepted
-Time: 6540
-T1 failed to have any bids accepted
-Time: 6600
-T1 failed to have any bids accepted
-Time: 6660
-T1 failed to have any bids accepted
-Time: 6720
-T1 failed to have any bids accepted
-Time: 6780
-T1 failed to have any bids accepted
-Time: 6840
-T1 failed to have any bids accepted
-Time: 6900
-T1 failed to have any bids accepted
-Time: 6960
-T1 failed to have any bids accepted
-Time: 7020
-T1 failed to have any bids accepted
+
+ Time: 6120 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.64969992277979
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6120 || T1 failed to have any bids accepted
+
+ Time: 6180 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.6096999227798
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6180 || T1 failed to have any bids accepted
+
+ Time: 6240 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.56969992277979
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6240 || T1 failed to have any bids accepted
+
+ Time: 6300 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.52969992277981
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6300 || T1 failed to have any bids accepted
+
+ Time: 6360 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.4896999227798
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6360 || T1 failed to have any bids accepted
+
+ Time: 6420 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.44969992277983
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6420 || T1 failed to have any bids accepted
+
+ Time: 6480 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.40969992277984
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6480 || T1 failed to have any bids accepted
+
+ Time: 6540 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.36969992277983
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6540 || T1 failed to have any bids accepted
+
+ Time: 6600 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.32969992277984
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6600 || T1 failed to have any bids accepted
+
+ Time: 6660 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.28969992277985
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6660 || T1 failed to have any bids accepted
+
+ Time: 6720 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.24969992277985
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6720 || T1 failed to have any bids accepted
+
+ Time: 6780 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.20969992277988
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6780 || T1 failed to have any bids accepted
+
+ Time: 6840 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.16969992277987
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6840 || T1 failed to have any bids accepted
+
+ Time: 6900 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.12969992277989
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6900 || T1 failed to have any bids accepted
+
+ Time: 6960 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.08969992277991
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 6960 || T1 failed to have any bids accepted
+
+ Time: 7020 || T1 available to bid. Options:
+Node: DSG || Possible: 0 || Profit: 243.3506632216264
+Node: ISS || Possible: 1 || Profit: -99.04969992277992
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
+
+Time: 7020 || T1 failed to have any bids accepted
+
+ Time: 7080 || T1 available to bid. Options:
+Node: DSG || Possible: 1 || Profit: 192.59049592236684
 
 Transporter T1 bids on node DSG
-Profit: 267.5713607572471
+Profit: 192.59049592236684
 TOF: 430296.40256860683
+
+Node: ISS || Possible: 1 || Profit: -99.00969992277992
+Node: GeoSSP || Possible: 0 || Profit: 147.3506632216264
 
 Time: 7080
 T1 accepted bid on DSG
+To deliver 80.0 resources
+
 
 Time: 7140
 Transaction: T1 buying from LeoDepot
-Transaction Value: 14.000333902395482
-Transaction Volume: 17.500417377994353
+Transaction Value: -61.27343864871812
+Transaction Volume: 61.27736039978371
 
 
 Time: 7140
@@ -94,6 +217,6 @@ T1 has docked at DSG
 
 Time: 437520
 Transaction: T1 selling to DSG
-Transaction Value: 142.41967449248867
-Transaction Volume: 40.69133556928248
+Transaction Value: 336.0
+Transaction Volume: 80.0
 
