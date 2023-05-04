@@ -1,0 +1,10 @@
+﻿id,resource_lvl,orig,operator
+T1,0.4,LeoDepot,UPS
+T2,0.2,LeoDepot,UPS
+T3,0.1,LeoDepot,FedEx
+T4,0.5,LeoDepot,FedEx
+T5,0.4,LeoDepot,UPS
+T6,0.1,LeoDepot,FedEx
+T7,0.3,LeoDepot,Amazon
+T8,0.6,LeoDepot,Amazon
+T9,0.2,LeoDepot,Amazon

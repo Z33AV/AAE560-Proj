@@ -37,7 +37,7 @@ class OverallModel(mesa.Model):
 
         #define filenames for later
         self.root_path = "./560_Project_Runs/"
-        self.run_name = "Run_1/"
+        self.run_name = "1_2_3_Run/"
         self.main_output = None
         self.main_data = None
         self.ledger = None
