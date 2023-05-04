@@ -22,11 +22,11 @@ def node2str(node):
 
 def d_curve(x): #demand curve (0<= x <= 1)
     a = 0.5
-    return (1 + a) * (0.6*(x**0.5))/(2*a)
+    return (1 + a) - (0.6*(x**0.5))/(2*a)
 
 def s_curve(x): #supply curve (0<= x <= 1)
     b = 0.25
-    return (1 + b) * (x**2)/(10*b)
+    return (1 + b) + (x**2)/(10*b)
 
 class Node(mesa.Agent):
     def __init__(self,Location,OrbitPars,capacity,resource_lvl,iid,operator,model,price,c_rate,econ_type,fixed):
@@ -103,7 +103,7 @@ class Node(mesa.Agent):
     def getPrem(self, t): #t: 0 = buy, 1 = sell
         prem = 1
         inv = (self.resource+self.incoming)/self.capacity #normalized inventory level (including incoming)
-        if(t == 0): #indicates a buy price check
+        if(t == 1): #indicates a buy price check
             prem = d_curve(inv)
         else:
             prem = s_curve(inv)
@@ -176,8 +176,8 @@ class Transporter(mesa.Agent):
         self.margin = 0.05 #desired margin
         self.model = model
         self.compute = 0
-        self.fuel_reserve = 0.2
-        self.fuel_economy = 0.1 #dV/resource achievable by transporters
+        self.fuel_reserve = 0.275
+        self.fuel_economy = 0.15 #dV/resource achievable by transporters
         self.idle = 0 #current idle time is 0
         self.tsfr = None #empty init method
         self.deliver_amt = 0
@@ -249,7 +249,7 @@ class Transporter(mesa.Agent):
         self.dest.Reserve(self) #broken because self.dest is a stringof the destination id, not the actual object
     
     def unDock(self):
-        jstr = str(self.model.model_time)+","+self.id+","+self.Current_Node.id+","+self.dest.id+","+str(self.TOF_remain)
+        jstr = str(self.model.model_time)+","+self.id+","+self.Current_Node.id+","+self.dest.id+","+str(self.TOF_remain)+"\n"
         self.model.jlog.write(jstr)
         self.Current_Node.unDock(self)
         self.Current_Node = None
@@ -257,11 +257,8 @@ class Transporter(mesa.Agent):
     def profit(self, node): #KNOWN LIMITATION: Profit inflated for impossible transfers, not actually an issue but gives misleading results (stems from method of marking tsfr impossible)
         tsfr = Phys.ComputeTransfer(self.Current_Node, node)
         dv_cost = tsfr['dV']/self.fuel_economy
-        if(tsfr['isPossible']): #for possible transfers I can consider keeping half my transfer cost in reserve instead of the default fuel reserve
-            profit = min(node.max_amt(0), max(self.capacity - dv_cost, (1 - self.fuel_reserve) * self.capacity)) * node.buy_price() #how much the delivery nets me
-        else:
-            profit = min(node.max_amt(0), (1 - self.fuel_reserve) * self.capacity) * node.buy_price() #how much the delivery nets me
-        profit = profit - self.current_price*self.resource #value of current inventory
+        profit = min(node.max_amt(0), (1 - self.fuel_reserve) * self.capacity) * node.buy_price() #how much the delivery nets me
+        #profit = profit - self.current_price*self.resource #value of current inventory
         profit = profit - self.Current_Node.sell_price(self) * (self.capacity - self.resource) #cost to fill inventory
         res_val = ((self.resource*self.current_price) + (self.capacity-self.resource)*self.Current_Node.sell_price(self))/self.capacity #current resource value of hypothetical full inventory
         profit = profit - res_val*dv_cost
@@ -270,16 +267,18 @@ class Transporter(mesa.Agent):
     def find_seller(self):
         opts = []
         opt_vs = []
+        self.model.main_output.write("\n Time: "+str(self.model.model_time)+" || "+self.id+" looking for seller. Options:\n")
         for i in self.model.NodeAglist:
-            if(i.seller):
+            if(i.seller and (self.Current_Node.id.lower() != i.id.lower())):
                 tmp = Phys.ComputeTransfer(self.Current_Node, i)
-                if(tmp['isPossible']):
+                self.model.main_output.write("Node: "+i.id+" || possible? = "+str(tmp["isPossible"])+" || Resource Cost = "+str(tmp['dV']/self.fuel_economy)+"\n")
+                if(tmp['isPossible'] and i.resource > self.capacity*0.8 and (tmp['dV']/self.fuel_economy) < self.resource):
                     opts.append(i)
-                    p = -1
+                    p = i.sell_price(self)
                     opt_vs.append(p)
         if(len(opts) < 1):
             return
-        ind = opt_vs.index(max(opt_vs))
+        ind = opt_vs.index(min(opt_vs))
         self.dest = opts[ind]
         self.tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest)
         self.TOF_remain = self.tsfr['TOF'] #compute and store time of flight
@@ -344,13 +343,13 @@ class Transporter(mesa.Agent):
                 if(best is None):
                     print("Error: Failed to Assign Dest Node")
                 else:
-                    self.deliver_amt = min(best.max_amt(0), self.capacity*(1-self.fuel_reserve))
+                    self.tsfr = Phys.ComputeTransfer(self.Current_Node, best) #get transfer details
+                    self.deliver_amt = min(best.max_amt(0), (1 - self.fuel_reserve) * self.capacity)
                     best.Reserve(self.deliver_amt) #tell the node I accept and am on my way
                     self.model.main_output.write("\nTime: "+str(self.model.model_time)+"\n"+self.id+" accepted bid on "+best.id+"\n")
                     self.model.main_output.write("To deliver "+str(self.deliver_amt)+" resources\n\n")
                     self.state = 1 #move to next state
                     self.dest = best
-                    self.tsfr = Phys.ComputeTransfer(self.Current_Node, self.dest) #get transfer details
                     self.TOF_remain = self.tsfr['TOF']
                     self.dest_opts = []
         else:

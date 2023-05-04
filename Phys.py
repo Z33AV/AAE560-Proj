@@ -49,6 +49,11 @@ def ComputeTransfer(origin,dest):
     
     r_i = numpy.sqrt(origin.loc[0]**2 + origin.loc[1]**2)
     r_f = numpy.sqrt(dest.loc[0]**2 + dest.loc[1]**2)
+
+    if r_f > r_i:
+        sign = 1
+    else:
+        sign = -1
     
     # calcTransfer = 0
     # tof = -1
@@ -56,15 +61,16 @@ def ComputeTransfer(origin,dest):
     
     # Determine if transfer is possible
     try:
-        ang = math.acos(numpy.dot(pre,post)/(r_i*r_f)) # rad, angle between two objects
+        ang = math.acos(numpy.dot(pre,post)/(r_i*r_f))*sign # rad, angle between two objects
     
         n_f = numpy.sqrt(mu/r_f**3)             # rad/s, mean motion of destination node
         a_t = 1/2 * (r_i + r_f)                 # km, transfer orbit SMA 
         tof = math.pi * numpy.sqrt(a_t**3/mu)   # s, time-of-flight
-        phi = math.pi - n_f * tof               # rad, required phase angle
+        num = math.pi - n_f * tof               # rad, required phase angle
+        phi = math.fmod(num,2*math.pi)
     
         # 5 deg tolerance for transfer geometry 
-        if abs(phi - ang)*180/math.pi <= 15: 
+        if abs(phi - ang)*180/math.pi <= 22.5: 
             calcTransfer = 1
         else:
             calcTransfer = 0
